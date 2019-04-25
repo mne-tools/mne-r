@@ -91,9 +91,9 @@
     
 <div id="mne-r-fast-acccess-to-mne-python-from-within-r" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#mne-r-fast-acccess-to-mne-python-from-within-r" class="anchor"></a>MNE-R fast acccess to MNE-Python from within R</h1></div>
+<a href="#mne-r-fast-acccess-to-mne-python-from-within-r" class="anchor"></a>MNE-R: fast acccess to MNE-Python from within R</h1></div>
 <p><img src="reference/figures/mne_logo.png" align="right" alt="" width="160"></p>
-<p>The <a href="https://mne-tools.github.io/stable/index.html">MNE-Python</a> project provides a full tool stack for processing and visualizing electrophysiology data. That is, electroencephalography (EEG), magnetoencephalography but also intracranial EEG. MNE-R facilitates integrating this mature and extensive functionality into R-based data processing, visualization and statisticasl modeling. This is made possible through the <a href="https://rstudio.github.io/reticulate/">reticulate</a> package, which enables seamless integration of Python into R.</p>
+<p>The <a href="https://mne-tools.github.io/stable/index.html">MNE-Python</a> project provides a full tool stack for processing and visualizing electrophysiology data. That is, electroencephalography (EEG), magnetoencephalography but also intracranial EEG. <a href="https://mne-tools.github.io/mne-r/index.html">MNE-R</a> facilitates integrating this mature and extensive functionality into R-based data processing, visualization and statisticasl modeling. This is made possible through the <a href="https://rstudio.github.io/reticulate/">reticulate</a> package, which enables seamless integration of Python into R.</p>
 <p>Currently, MNE-R is focussing on documenting how to use MNE-Python through R, based on familiar <a href="https://mne-tools.github.io/stable/auto_examples/index.html">MNE-examples</a> while also showcasing what R can add to the game in terms of statistics and visualization functionality.</p>
 <p>In the future, more R-functions may be added that facilitate the interaction with MNE-Python or implement complementary functionality.</p>
 <p>The project is open to contributions.</p>
@@ -153,7 +153,7 @@
 <h2 class="hasAnchor">
 <a href="#known-issues" class="anchor"></a>Known issues</h2>
 <ul>
-<li>Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside the Rstudio Rmarkdown chunk. You will need to save the figure or explicitly, write Python code in a Python chunk, or explicitly make maptlotlib open a window:</li>
+<li>Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside the Rstudio Rmarkdown chunk. You will need to save, load and display the figure or explicitly, write Python code in a Python chunk, or explicitly make maptlotlib open a window:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mne)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">plt &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">"matplotlib.pyplot"</span>)  <span class="co"># get matplotlib handle</span></a>

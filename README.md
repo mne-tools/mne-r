@@ -1,12 +1,13 @@
 
-# MNE-R fast acccess to MNE-Python from within R
+# MNE-R: fast acccess to MNE-Python from within R
 
 <img src="man/figures/mne_logo.png" align="right" alt="" width="160" />
 
 The [MNE-Python](https://mne-tools.github.io/stable/index.html) project
 provides a full tool stack for processing and visualizing
 electrophysiology data. That is, electroencephalography (EEG),
-magnetoencephalography but also intracranial EEG. MNE-R facilitates
+magnetoencephalography but also intracranial EEG.
+[MNE-R](https://mne-tools.github.io/mne-r/index.html) facilitates
 integrating this mature and extensive functionality into R-based data
 processing, visualization and statisticasl modeling. This is made
 possible through the [reticulate](https://rstudio.github.io/reticulate/)
@@ -97,8 +98,9 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 
   - Currently, when making matplotlib figures from within R, the
     resulting image will not be rendered inside the Rstudio Rmarkdown
-    chunk. You will need to save the figure or explicitly, write Python
-    code in a Python chunk, or explicitly make maptlotlib open a window:
+    chunk. You will need to save, load and display the figure or
+    explicitly, write Python code in a Python chunk, or explicitly make
+    maptlotlib open a window:
 
 <!-- end list -->
 

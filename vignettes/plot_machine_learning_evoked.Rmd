@@ -62,10 +62,10 @@ epochs <- mne$Epochs(raw = raw, events = events,
                      decim = decim, preload = T)
 ```
 
-We can set up the model
+We can set up the model. For this we will need to do a few imports
+from [scikit-learn](https://scikit-learn.org/stable/index.html).
 
 ```{r}
-# we'll do a few scikit-learn imports
 preproc <- reticulate::import("sklearn.preprocessing")
 pipeline <- reticulate::import("sklearn.pipeline")
 linear_model <- reticulate::import("sklearn.linear_model")
@@ -100,7 +100,7 @@ scores_df <- scores %>%
   gather(key = "time", value = "score")
 
 # and add the info about the folds.
-scores_df$fold <- sprintf("fold %s", 1:5) # R expands this magically ...
+scores_df$fold <- sprintf("fold %s", 1:5) # R expands it magically ...
   
 ggplot(
   data = scores_df,

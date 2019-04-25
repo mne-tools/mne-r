@@ -135,28 +135,27 @@
 <a class="sourceLine" id="cb8-15" data-line-number="15">                     <span class="dt">tmax =</span> tmax, <span class="dt">picks =</span> picks, <span class="dt">proj =</span> T,</a>
 <a class="sourceLine" id="cb8-16" data-line-number="16">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>,</a>
 <a class="sourceLine" id="cb8-17" data-line-number="17">                     <span class="dt">decim =</span> decim, <span class="dt">preload =</span> T)</a></code></pre></div>
-<p>We can set up the model</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># we'll do a few scikit-learn imports</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">preproc &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.preprocessing"</span>)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">pipeline &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.pipeline"</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">linear_model &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.linear_model"</span>)</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">clf &lt;-<span class="st"> </span>pipeline<span class="op">$</span><span class="kw">make_pipeline</span>(</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">  preproc<span class="op">$</span><span class="kw">StandardScaler</span>(), </a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">  linear_model<span class="op">$</span><span class="kw">LogisticRegression</span>(<span class="dt">solver =</span> <span class="st">"lbfgs"</span>))</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">time_decod &lt;-<span class="st"> </span>mne<span class="op">$</span>decoding<span class="op">$</span><span class="kw">SlidingEstimator</span>(</a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">  clf, <span class="dt">scoring =</span> <span class="st">"roc_auc"</span>, <span class="dt">n_jobs =</span> 1L)</a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co"># MEG signals: n_epochs, n_meg_channels, n_times</span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">X &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">get_data</span>()</a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="co"># R vs Python indexing!</span></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">y &lt;-<span class="st"> </span>epochs<span class="op">$</span>events[, <span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co"># recode and make sure it's an int.</span></a>
-<a class="sourceLine" id="cb9-18" data-line-number="18">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(y <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>() </a>
-<a class="sourceLine" id="cb9-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb9-20" data-line-number="20">scores &lt;-<span class="st"> </span>mne<span class="op">$</span>decoding<span class="op">$</span><span class="kw">cross_val_multiscore</span>(time_decod, X, y,</a>
-<a class="sourceLine" id="cb9-21" data-line-number="21">                                            <span class="dt">cv =</span> 5L, <span class="dt">n_jobs =</span> 1L)</a></code></pre></div>
+<p>We can set up the model. For this we will need to do a few imports from <a href="https://scikit-learn.org/stable/index.html">scikit-learn</a>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">preproc &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.preprocessing"</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">pipeline &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.pipeline"</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">linear_model &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/import">import</a></span>(<span class="st">"sklearn.linear_model"</span>)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">clf &lt;-<span class="st"> </span>pipeline<span class="op">$</span><span class="kw">make_pipeline</span>(</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">  preproc<span class="op">$</span><span class="kw">StandardScaler</span>(), </a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">  linear_model<span class="op">$</span><span class="kw">LogisticRegression</span>(<span class="dt">solver =</span> <span class="st">"lbfgs"</span>))</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">time_decod &lt;-<span class="st"> </span>mne<span class="op">$</span>decoding<span class="op">$</span><span class="kw">SlidingEstimator</span>(</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">  clf, <span class="dt">scoring =</span> <span class="st">"roc_auc"</span>, <span class="dt">n_jobs =</span> 1L)</a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co"># MEG signals: n_epochs, n_meg_channels, n_times</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">X &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">get_data</span>()</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co"># R vs Python indexing!</span></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15">y &lt;-<span class="st"> </span>epochs<span class="op">$</span>events[, <span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co"># recode and make sure it's an int.</span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(y <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>() </a>
+<a class="sourceLine" id="cb9-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb9-19" data-line-number="19">scores &lt;-<span class="st"> </span>mne<span class="op">$</span>decoding<span class="op">$</span><span class="kw">cross_val_multiscore</span>(time_decod, X, y,</a>
+<a class="sourceLine" id="cb9-20" data-line-number="20">                                            <span class="dt">cv =</span> 5L, <span class="dt">n_jobs =</span> 1L)</a></code></pre></div>
 <p>Time for action with R to plot the outputs!</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># first we add the time info after rounding</span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(scores) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(epochs<span class="op">$</span>times <span class="op">*</span><span class="st"> </span><span class="fl">1e3</span>)</a>
@@ -167,7 +166,7 @@
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">"time"</span>, <span class="dt">value =</span> <span class="st">"score"</span>)</a>
 <a class="sourceLine" id="cb10-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co"># and add the info about the folds.</span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10">scores_df<span class="op">$</span>fold &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sprintf">sprintf</a></span>(<span class="st">"fold %s"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="co"># R expands this magically ...</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">scores_df<span class="op">$</span>fold &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sprintf">sprintf</a></span>(<span class="st">"fold %s"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="co"># R expands it magically ...</span></a>
 <a class="sourceLine" id="cb10-11" data-line-number="11">  </a>
 <a class="sourceLine" id="cb10-12" data-line-number="12"><span class="kw">ggplot</span>(</a>
 <a class="sourceLine" id="cb10-13" data-line-number="13">  <span class="dt">data =</span> scores_df,</a>
