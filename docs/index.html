@@ -59,7 +59,7 @@
       <a href="articles/plot_machine_learning_evoked.html">Using machine learning to analyze evoked responses</a>
     </li>
     <li>
-      <a href="articles/plot_process_evoked.html">MNE-R: using the MNE package from inside R</a>
+      <a href="articles/plot_process_evoked.html">Processing MEG and EEG from raw to evoked</a>
     </li>
   </ul>
 </li>
@@ -93,8 +93,8 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#mne-r-fast-acccess-to-mne-python-from-within-r" class="anchor"></a>MNE-R fast acccess to MNE-Python from within R</h1></div>
 <p><img src="reference/figures/mne_logo.png" align="right" alt="" width="160"></p>
-<p>The <a href="https://mne-tools.github.io/stable/index.html">MNE-Python</a> project provides a full tool stack for processing and visualizing electrophysiology data. That is, electroencephalography (EEG), magnetoencephalography but also intracranial EEG. MNE-R facilitates integrating this mature and extensive functionality into R-based data processing, visualization and statisticasl modeling. This is made possible through the <a href="https://rstudio.github.io/reticulate/">reticulate</a>, which enables seamless integration of Python into R.</p>
-<p>Currently, MNE-R is mainly focussing on documenting how to use MNE-Python through R, based on familiar <a href="https://mne-tools.github.io/stable/auto_examples/index.html">MNE-examples</a> while also showcasing what R can add to the game in terms of statistics and visualization functionality.</p>
+<p>The <a href="https://mne-tools.github.io/stable/index.html">MNE-Python</a> project provides a full tool stack for processing and visualizing electrophysiology data. That is, electroencephalography (EEG), magnetoencephalography but also intracranial EEG. MNE-R facilitates integrating this mature and extensive functionality into R-based data processing, visualization and statisticasl modeling. This is made possible through the <a href="https://rstudio.github.io/reticulate/">reticulate</a> package, which enables seamless integration of Python into R.</p>
+<p>Currently, MNE-R is focussing on documenting how to use MNE-Python through R, based on familiar <a href="https://mne-tools.github.io/stable/auto_examples/index.html">MNE-examples</a> while also showcasing what R can add to the game in terms of statistics and visualization functionality.</p>
 <p>In the future, more R-functions may be added that facilitate the interaction with MNE-Python or implement complementary functionality.</p>
 <p>The project is open to contributions.</p>
 <div id="getting-started" class="section level2">
@@ -108,53 +108,78 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mne)  <span class="co"># load mne and get the mne object</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; Importing MNE version=0.18.dev0, path='/Users/dengeman/github/mne-python/mne'</span></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(mne)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])  <span class="co"># the mne object wraps the loaded mne module inside Python</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;  [1] "AcqParserFIF"               "add_reference_channels"    </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  [3] "add_source_space_distances" "annotations"               </span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;  [5] "Annotations"                "apply_forward"             </span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;  [7] "apply_forward_raw"          "average_forward_solutions" </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt;  [9] "BaseEpochs"                 "baseline"</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co"># use dollar signs to access MNE modules, functions and objects</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(mne<span class="op">$</span>datasets<span class="op">$</span>sample<span class="op">$</span>data_path<span class="op">$</span><span class="st">`</span><span class="dt">__doc__</span><span class="st">`</span>)</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; Get path to local copy of sample dataset.</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;     Parameters</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;     ----------</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;     path : None | str</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;         Location of where to look for the sample dataset.</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;         If None, the environment variable or config parameter</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;         ``MNE_DATASETS_SAMPLE_PATH`` is used. If it doesn't exist, the</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;         "~/mne_data" directory is used. If the sample dataset</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;         is not found under the given path, the data</span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;         will be automatically downloaded to the specified folder.</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;     force_update : bool</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt;         Force update of the sample dataset even if a local copy exists.</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt;     update_path : bool | None</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt;         If True, set the ``MNE_DATASETS_SAMPLE_PATH`` in mne-python</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;         config to the given path. If None, the user is prompted.</span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;     download : bool</span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt;         If False and the sample dataset has not been downloaded yet,</span></a>
-<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt;         it will not be downloaded and the path will be returned as</span></a>
-<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt;         '' (empty string). This is mostly used for debugging purposes</span></a>
-<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt;         and can be safely ignored by most users.</span></a>
-<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt;     </span></a>
-<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#&gt;     verbose : bool, str, int, or None</span></a>
-<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#&gt;         If not None, override default verbose level (see :func:`mne.verbose`</span></a>
-<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#&gt;         and :ref:`Logging documentation &lt;tut_logging&gt;` for more).</span></a>
-<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="co">#&gt;     Returns</span></a>
-<a class="sourceLine" id="cb2-40" data-line-number="40"><span class="co">#&gt;     -------</span></a>
-<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="co">#&gt;     path : str</span></a>
-<a class="sourceLine" id="cb2-42" data-line-number="42"><span class="co">#&gt;         Path to sample dataset directory.</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># the mne object wraps the loaded mne module inside Python</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(mne)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  [1] "AcqParserFIF"               "add_reference_channels"    </span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;  [3] "add_source_space_distances" "annotations"               </span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;  [5] "Annotations"                "apply_forward"             </span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt;  [7] "apply_forward_raw"          "average_forward_solutions" </span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;  [9] "BaseEpochs"                 "baseline"</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co"># use dollar signs to access MNE modules, functions and objects</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(mne<span class="op">$</span>datasets<span class="op">$</span>sample<span class="op">$</span>data_path<span class="op">$</span><span class="st">`</span><span class="dt">__doc__</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; Get path to local copy of sample dataset.</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;     Parameters</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;     ----------</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;     path : None | str</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;         Location of where to look for the sample dataset.</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;         If None, the environment variable or config parameter</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;         ``MNE_DATASETS_SAMPLE_PATH`` is used. If it doesn't exist, the</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;         "~/mne_data" directory is used. If the sample dataset</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;         is not found under the given path, the data</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;         will be automatically downloaded to the specified folder.</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt;     force_update : bool</span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt;         Force update of the sample dataset even if a local copy exists.</span></a>
+<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt;     update_path : bool | None</span></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;         If True, set the ``MNE_DATASETS_SAMPLE_PATH`` in mne-python</span></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;         config to the given path. If None, the user is prompted.</span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt;     download : bool</span></a>
+<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt;         If False and the sample dataset has not been downloaded yet,</span></a>
+<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt;         it will not be downloaded and the path will be returned as</span></a>
+<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt;         '' (empty string). This is mostly used for debugging purposes</span></a>
+<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt;         and can be safely ignored by most users.</span></a>
+<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#&gt;     </span></a>
+<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#&gt;     verbose : bool, str, int, or None</span></a>
+<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#&gt;         If not None, override default verbose level (see :func:`mne.verbose`</span></a>
+<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#&gt;         and :ref:`Logging documentation &lt;tut_logging&gt;` for more).</span></a>
+<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-40" data-line-number="40"><span class="co">#&gt;     Returns</span></a>
+<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="co">#&gt;     -------</span></a>
+<a class="sourceLine" id="cb2-42" data-line-number="42"><span class="co">#&gt;     path : str</span></a>
+<a class="sourceLine" id="cb2-43" data-line-number="43"><span class="co">#&gt;         Path to sample dataset directory.</span></a></code></pre></div>
 </div>
 <div id="known-issues" class="section level2">
 <h2 class="hasAnchor">
 <a href="#known-issues" class="anchor"></a>Known issues</h2>
 <ul>
-<li><p>Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside Rstudio. You will need to save the figure or explicitly write Python code in a Python chunk.</p></li>
-<li><p>Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.</p></li>
+<li>Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside the Rstudio Rmarkdown chunk. You will need to save the figure or explicitly, write Python code in a Python chunk, or explicitly make maptlotlib open a window:</li>
 </ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mne)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">plt &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">"matplotlib.pyplot"</span>)  <span class="co"># get matplotlib handle</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">data_path &lt;-<span class="st"> </span>mne<span class="op">$</span>datasets<span class="op">$</span>sample<span class="op">$</span><span class="kw">data_path</span>()</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">raw_fname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(data_path,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">                   <span class="st">'MEG'</span>, </a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">                   <span class="st">'samlpe'</span>,</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">                   <span class="st">'sample_audvis_filt-0-40_raw.fif'</span>,</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">                   <span class="dt">sep =</span> <span class="st">'/'</span>)</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">raw &lt;-<span class="st"> </span>mne<span class="op">$</span>io<span class="op">$</span><span class="kw">read_Raw_fif</span>(raw_fname)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">raw<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>()  <span class="co"># plot it!</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">plt<span class="op">$</span><span class="kw">show</span>()  <span class="co"># show the fiture, then search for the window popping up.</span></a></code></pre></div>
+<ul>
+<li>Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.</li>
+</ul>
+</div>
+<div id="roadmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#roadmap" class="anchor"></a>Roadmap</h2>
+<ol style="list-style-type: decimal">
+<li>Add many vignettes and examples</li>
+<li>Find common inconvenient steps and add convenience R functions</li>
+<li>Motivate contributed examples and code from the R-EEG community</li>
+<li>Add advanced content that leverages functionality unique to R</li>
+</ol>
 </div>
 </div>
   </div>

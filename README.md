@@ -9,12 +9,11 @@ electrophysiology data. That is, electroencephalography (EEG),
 magnetoencephalography but also intracranial EEG. MNE-R facilitates
 integrating this mature and extensive functionality into R-based data
 processing, visualization and statisticasl modeling. This is made
-possible through the
-[reticulate](https://rstudio.github.io/reticulate/), which enables
-seamless integration of Python into R.
+possible through the [reticulate](https://rstudio.github.io/reticulate/)
+package, which enables seamless integration of Python into R.
 
-Currently, MNE-R is mainly focussing on documenting how to use
-MNE-Python through R, based on familiar
+Currently, MNE-R is focussing on documenting how to use MNE-Python
+through R, based on familiar
 [MNE-examples](https://mne-tools.github.io/stable/auto_examples/index.html)
 while also showcasing what R can add to the game in terms of statistics
 and visualization functionality.
@@ -52,7 +51,8 @@ To get started, simply laod the mne library
 library(mne)  # load mne and get the mne object
 #> Importing MNE version=0.18.dev0, path='/Users/dengeman/github/mne-python/mne'
 
-print(names(mne)[1:10])  # the mne object wraps the loaded mne module inside Python
+# the mne object wraps the loaded mne module inside Python
+print(names(mne)[1:10])
 #>  [1] "AcqParserFIF"               "add_reference_channels"    
 #>  [3] "add_source_space_distances" "annotations"               
 #>  [5] "Annotations"                "apply_forward"             
@@ -95,6 +95,34 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 
 ## Known issues
 
-Currently, when making matplotlib figures from within R, the resulting
-image will not be rendered inside Rstudio. You will need to save the
-figure or explicitly write Python code in a Python chunk.
+  - Currently, when making matplotlib figures from within R, the
+    resulting image will not be rendered inside the Rstudio Rmarkdown
+    chunk. You will need to save the figure or explicitly, write Python
+    code in a Python chunk, or explicitly make maptlotlib open a window:
+
+<!-- end list -->
+
+``` r
+library(mne)
+plt <- import("matplotlib.pyplot")  # get matplotlib handle
+
+data_path <- mne$datasets$sample$data_path()
+raw_fname <- paste(data_path,
+                   'MEG', 
+                   'samlpe',
+                   'sample_audvis_filt-0-40_raw.fif',
+                   sep = '/')
+raw <- mne$io$read_Raw_fif(raw_fname)
+raw$plot()  # plot it!
+plt$show()  # show the fiture, then search for the window popping up.
+```
+
+  - Some of the examples may depend on the latest MNE-Python code. We
+    will try to provide patches little by little in MNE-Python or here.
+
+## Roadmap
+
+1.  Add many vignettes and examples
+2.  Find common inconvenient steps and add convenience R functions
+3.  Motivate contributed examples and code from the R-EEG community
+4.  Add advanced content that leverages functionality unique to R
