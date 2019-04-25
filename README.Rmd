@@ -52,5 +52,7 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 ```
 ## Known issues
 
-Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside Rstudio.
+- Currently, when making matplotlib figures from within R, the resulting image will not be rendered inside Rstudio.
 You will need to save the figure or explicitly write Python code in a Python chunk.
+
+- Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.

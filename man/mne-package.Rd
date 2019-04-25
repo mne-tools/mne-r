@@ -14,7 +14,7 @@ This package is documents how to use MNE-Python from
 Useful links:
 \itemize{
   \item \url{https://github.com/mne-tools/mne-r}
-  \item Report bugs at \url{https://github.com/mne-tools/mne-r}
+  \item Report bugs at \url{https://github.com/mne-tools/mne-r/issues}
 }
 
 }
