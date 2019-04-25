@@ -17,7 +17,7 @@ vignette: >
 This is a basic demo showcasing the reticulate package through which we obtain
 access to MNE-Python from inside R.
 
-```{r setup, include=T}
+```{r setup, include = T, echo = F}
 library(tidyverse)
 library(mne)
 ```

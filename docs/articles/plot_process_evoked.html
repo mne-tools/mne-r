@@ -61,7 +61,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/mne-tools/mne-r">
+    <span class="fa fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -76,7 +83,8 @@
       <h1>MNE-R: using the MNE package from inside R</h1>
                         <h4 class="author">Denis A. Engemann</h4>
             <address class="author_afil">
-      INRIA Saclay, Parietal <a href="mailto:denis-alexander.engemann@inria.fr" class="email">denis-alexander.engemann@inria.fr</a><br><div class="hidden name"><code>plot_process_evoked.Rmd</code></div>
+      INRIA Saclay, Parietal <a href="mailto:denis-alexander.engemann@inria.fr" class="email">denis-alexander.engemann@inria.fr</a><br><small class="dont-index">Source: <a href="https://github.com/mne-tools/mne-r/blob/master/vignettes/plot_process_evoked.Rmd"><code>vignettes/plot_process_evoked.Rmd</code></a></small>
+      <div class="hidden name"><code>plot_process_evoked.Rmd</code></div>
 
     </address>
 </div>
@@ -84,7 +92,6 @@
     
     
 <p>This is a basic demo showcasing the reticulate package through which we obtain access to MNE-Python from inside R.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse)</a></code></pre></div>
 <pre><code>## ── Attaching packages ───────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.1.0       ✔ purrr   0.3.1  
 ## ✔ tibble  2.0.1       ✔ dplyr   0.8.0.1
@@ -93,83 +100,82 @@
 <pre><code>## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mne)</a></code></pre></div>
 <pre><code>## Importing MNE version=0.18.dev0, path='/Users/dengeman/github/mne-python/mne'</code></pre>
 <p>Let’s read in the raw data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">data_path &lt;-<span class="st"> </span>mne<span class="op">$</span>datasets<span class="op">$</span>sample<span class="op">$</span><span class="kw">data_path</span>()</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">subject &lt;-<span class="st"> "sample"</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">raw_fname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(data_path,</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">                   <span class="st">'MEG'</span>, </a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">                   subject,</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">                   <span class="st">'sample_audvis_filt-0-40_raw.fif'</span>,</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">                   <span class="dt">sep =</span> <span class="st">'/'</span>)</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">raw &lt;-<span class="st"> </span>mne<span class="op">$</span>io<span class="op">$</span><span class="kw">read_raw_fif</span>(raw_fname, <span class="dt">preload =</span> T)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">data_path &lt;-<span class="st"> </span>mne<span class="op">$</span>datasets<span class="op">$</span>sample<span class="op">$</span><span class="kw">data_path</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">subject &lt;-<span class="st"> "sample"</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">raw_fname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(data_path,</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                   <span class="st">'MEG'</span>, </a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                   subject,</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">                   <span class="st">'sample_audvis_filt-0-40_raw.fif'</span>,</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">                   <span class="dt">sep =</span> <span class="st">'/'</span>)</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">raw &lt;-<span class="st"> </span>mne<span class="op">$</span>io<span class="op">$</span><span class="kw">read_raw_fif</span>(raw_fname, <span class="dt">preload =</span> T)</a></code></pre></div>
 <p>Let’s now quickly preprocess the data.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">raw<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="dv">1</span>, <span class="dv">40</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">raw<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="dv">1</span>, <span class="dv">40</span>)</a></code></pre></div>
 <pre><code>## &lt;Raw  |  sample_audvis_filt-0-40_raw.fif, n_channels x n_times : 376 x 41700 (277.7 sec), ~123.3 MB, data loaded&gt;</code></pre>
 <p>We can now go ahead and compute evokeds.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">events &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">find_events</span>(raw)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mode">storage.mode</a></span>(events) &lt;-<span class="st"> "integer"</span>  <span class="co"># R gets the events as floats.</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">tmin &lt;-<span class="st"> </span><span class="fl">-0.2</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">tmax &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">baseline &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/tuple">tuple</a></span>(<span class="ot">NULL</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">event_id &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"aud/l"</span> =<span class="st"> </span>1L, <span class="st">"aud/r"</span> =<span class="st"> </span>2L, <span class="st">"vis/l"</span> =<span class="st"> </span>3L, <span class="st">"vis/r"</span> =<span class="st"> </span>4L)</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">picks &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">pick_types</span>(raw<span class="op">$</span>info, <span class="dt">meg =</span> T, <span class="dt">eeg =</span> T)</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">epochs &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">Epochs</span>(<span class="dt">raw =</span> raw, <span class="dt">events =</span> events, <span class="dt">event_id =</span>event_id,</a>
-<a class="sourceLine" id="cb10-10" data-line-number="10">                     <span class="dt">tmin =</span> tmin, <span class="dt">tmax =</span> tmax,</a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">                     <span class="dt">picks =</span> picks <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>(),</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>, <span class="dt">preload =</span> T) </a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14">evoked &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">average</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">events &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">find_events</span>(raw)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mode">storage.mode</a></span>(events) &lt;-<span class="st"> "integer"</span>  <span class="co"># R gets the events as floats.</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">tmin &lt;-<span class="st"> </span><span class="fl">-0.2</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">tmax &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">baseline &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/tuple">tuple</a></span>(<span class="ot">NULL</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">event_id &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"aud/l"</span> =<span class="st"> </span>1L, <span class="st">"aud/r"</span> =<span class="st"> </span>2L, <span class="st">"vis/l"</span> =<span class="st"> </span>3L, <span class="st">"vis/r"</span> =<span class="st"> </span>4L)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">picks &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">pick_types</span>(raw<span class="op">$</span>info, <span class="dt">meg =</span> T, <span class="dt">eeg =</span> T)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">epochs &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">Epochs</span>(<span class="dt">raw =</span> raw, <span class="dt">events =</span> events, <span class="dt">event_id =</span>event_id,</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">                     <span class="dt">tmin =</span> tmin, <span class="dt">tmax =</span> tmax,</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">                     <span class="dt">picks =</span> picks <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>(),</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>, <span class="dt">preload =</span> T) </a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">evoked &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">average</span>()</a></code></pre></div>
 <p>Now it’s time to do a bit of R processing for getting doing custom evoked plots.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># use MNE method</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">evoked_df &lt;-<span class="st"> </span>evoked<span class="op">$</span><span class="kw">to_data_frame</span>(<span class="dt">long_format =</span> T)  <span class="co"># long</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># use MNE method</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">evoked_df &lt;-<span class="st"> </span>evoked<span class="op">$</span><span class="kw">to_data_frame</span>(<span class="dt">long_format =</span> T)  <span class="co"># long</span></a></code></pre></div>
 <p>Let’s plot it using ggplot2.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">  <span class="dt">data =</span> evoked_df,</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">color =</span> channel, <span class="dt">y =</span> observation)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group =</span> channel)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_wrap</span>(</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="op">~</span>ch_type,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="dt">nrow =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="dt">scales =</span> <span class="st">"free"</span>,</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">    <span class="dt">strip.position =</span> <span class="st">"left"</span>,</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">    <span class="dt">labeller =</span> <span class="kw">as_labeller</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">eeg =</span> <span class="st">"EEG [mV]"</span>, <span class="dt">grad =</span> <span class="st">"GRAD [fT/cm]"</span>, <span class="dt">mag =</span> <span class="st">"MAG [fT]"</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">'time [ms]'</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">"Helvetica"</span>, <span class="dt">size =</span> <span class="dv">24</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">  <span class="dt">data =</span> evoked_df,</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">color =</span> channel, <span class="dt">y =</span> observation)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group =</span> channel)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_wrap</span>(</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">    <span class="op">~</span>ch_type,</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">    <span class="dt">nrow =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">    <span class="dt">scales =</span> <span class="st">"free"</span>,</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">    <span class="dt">strip.position =</span> <span class="st">"left"</span>,</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">    <span class="dt">labeller =</span> <span class="kw">as_labeller</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">eeg =</span> <span class="st">"EEG [mV]"</span>, <span class="dt">grad =</span> <span class="st">"GRAD [fT/cm]"</span>, <span class="dt">mag =</span> <span class="st">"MAG [fT]"</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">'time [ms]'</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">"Helvetica"</span>, <span class="dt">size =</span> <span class="dv">24</span>))</a></code></pre></div>
 <p><img src="plot_process_evoked_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Let’s see if we can add spatial colors as in the MNE plot.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># we look up a private function from the epochs object</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">pos &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="st">`</span><span class="dt">_get_channel_positions</span><span class="st">`</span>()</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co"># we do the same normalization as in MNE</span></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">pos &lt;-<span class="st"> </span>pos <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pos, <span class="dv">1</span>, min)</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">pos &lt;-<span class="st"> </span>pos <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pos, <span class="dv">1</span>, <span class="cf">function</span>(x) {<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(x, <span class="fl">1e-16</span>)})</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co"># we set rgb values</span></a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">evoked_df<span class="op">$</span>r &lt;-<span class="st"> </span>pos[, <span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb13-9" data-line-number="9">evoked_df<span class="op">$</span>g &lt;-<span class="st"> </span>pos[, <span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb13-10" data-line-number="10">evoked_df<span class="op">$</span>b &lt;-<span class="st"> </span>pos[, <span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb13-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="kw">ggplot</span>(</a>
-<a class="sourceLine" id="cb13-13" data-line-number="13">  <span class="dt">data =</span> evoked_df,</a>
-<a class="sourceLine" id="cb13-14" data-line-number="14">  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">color =</span> channel, <span class="dt">y =</span> observation)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group =</span> channel,</a>
-<a class="sourceLine" id="cb13-16" data-line-number="16">                          <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/rgb">rgb</a></span>(r, g, b)), <span class="dt">size =</span> <span class="fl">0.8</span>, <span class="dt">alpha=</span><span class="fl">0.7</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-17" data-line-number="17"><span class="st">  </span><span class="kw">facet_wrap</span>(</a>
-<a class="sourceLine" id="cb13-18" data-line-number="18">    <span class="op">~</span>ch_type,</a>
-<a class="sourceLine" id="cb13-19" data-line-number="19">    <span class="dt">nrow =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb13-20" data-line-number="20">    <span class="dt">scales =</span> <span class="st">"free"</span>,</a>
-<a class="sourceLine" id="cb13-21" data-line-number="21">    <span class="dt">strip.position =</span> <span class="st">"left"</span>,</a>
-<a class="sourceLine" id="cb13-22" data-line-number="22">    <span class="dt">labeller =</span> <span class="kw">as_labeller</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">eeg =</span> <span class="st">"EEG [mV]"</span>, <span class="dt">grad =</span> <span class="st">"GRAD [fT/cm]"</span>, <span class="dt">mag =</span> <span class="st">"MAG [fT]"</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-23" data-line-number="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-24" data-line-number="24"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-25" data-line-number="25"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">'time [ms]'</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-26" data-line-number="26"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">"Helvetica"</span>, <span class="dt">size =</span> <span class="dv">24</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># we look up a private function from the epochs object</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">pos &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="st">`</span><span class="dt">_get_channel_positions</span><span class="st">`</span>()</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co"># we do the same normalization as in MNE</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">pos &lt;-<span class="st"> </span>pos <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pos, <span class="dv">1</span>, min)</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">pos &lt;-<span class="st"> </span>pos <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pos, <span class="dv">1</span>, <span class="cf">function</span>(x) {<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(x, <span class="fl">1e-16</span>)})</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co"># we set rgb values</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">evoked_df<span class="op">$</span>r &lt;-<span class="st"> </span>pos[, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">evoked_df<span class="op">$</span>g &lt;-<span class="st"> </span>pos[, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">evoked_df<span class="op">$</span>b &lt;-<span class="st"> </span>pos[, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb11-13" data-line-number="13">  <span class="dt">data =</span> evoked_df,</a>
+<a class="sourceLine" id="cb11-14" data-line-number="14">  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">color =</span> channel, <span class="dt">y =</span> observation)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group =</span> channel,</a>
+<a class="sourceLine" id="cb11-16" data-line-number="16">                          <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/rgb">rgb</a></span>(r, g, b)), <span class="dt">size =</span> <span class="fl">0.8</span>, <span class="dt">alpha=</span><span class="fl">0.7</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-17" data-line-number="17"><span class="st">  </span><span class="kw">facet_wrap</span>(</a>
+<a class="sourceLine" id="cb11-18" data-line-number="18">    <span class="op">~</span>ch_type,</a>
+<a class="sourceLine" id="cb11-19" data-line-number="19">    <span class="dt">nrow =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb11-20" data-line-number="20">    <span class="dt">scales =</span> <span class="st">"free"</span>,</a>
+<a class="sourceLine" id="cb11-21" data-line-number="21">    <span class="dt">strip.position =</span> <span class="st">"left"</span>,</a>
+<a class="sourceLine" id="cb11-22" data-line-number="22">    <span class="dt">labeller =</span> <span class="kw">as_labeller</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">eeg =</span> <span class="st">"EEG [mV]"</span>, <span class="dt">grad =</span> <span class="st">"GRAD [fT/cm]"</span>, <span class="dt">mag =</span> <span class="st">"MAG [fT]"</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-23" data-line-number="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-24" data-line-number="24"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-25" data-line-number="25"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">'time [ms]'</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-26" data-line-number="26"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">"Helvetica"</span>, <span class="dt">size =</span> <span class="dv">24</span>))</a></code></pre></div>
 <p><img src="plot_process_evoked_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
   </div>
 
