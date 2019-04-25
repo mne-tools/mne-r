@@ -1,0 +1,26 @@
+Package: mne
+Title: Fast Access to MNE-Python From Within R
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Denis",
+           family = "Engemann",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7223-1014"),
+           email = "denis-alexander.engemannt@inria.fr")
+Description:
+    This package is documents how to use MNE-Python from
+    within R using the retiuclate package. As needed, a small set of functions will be added
+    which facilitate the interaction with MNE-Python.
+License: BSD-3
+Encoding: UTF-8
+LazyData: true
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+Imports: 
+    reticulate
+Suggests:
+    tidyverse,
+    boot,
+    lme4,
+    knittr,
+    rmarkdown
