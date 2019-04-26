@@ -64,9 +64,9 @@ raw_fname <- paste(data_path,
                    'samlpe',
                    'sample_audvis_filt-0-40_raw.fif',
                    sep = '/')
-raw <- mne$io$read_Raw_fif(raw_fname)
+raw <- mne$io$read_raw_fif(raw_fname)
 raw$plot()  # plot it!
-plt$show()  # show the fiture, then search for the window popping up.
+plt$show()  # show the figure, then search for the window popping up.
 ```
 
 - Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.
