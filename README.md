@@ -40,9 +40,10 @@ currently [Rstudio 1.2
 preview](https://blog.rstudio.com/2018/10/09/rstudio-1-2-preview-reticulated-python/)
 is needed.
 
-Currently, mnr-r can be installed from github.
+Currently, MNE-R can be installed from github.
 
 ``` r
+library(devtools)
 devtools::install_github("mne-tools/mne-r")
 ```
 

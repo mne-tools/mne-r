@@ -98,12 +98,12 @@
     
     
 <p>Here we will use a multilevel model to assess the difference between two conditions over time. For now we will stick with the <code>lme4</code> optimization-based implementation and use the parametric bootstrap for uncertainty estimation. Bayesian inference will be covered in a future example.</p>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.1.1       ✔ purrr   0.3.2  
 ## ✔ tibble  2.1.1       ✔ dplyr   0.8.0.1
 ## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
 ## ✔ readr   1.3.1       ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre><code>## Importing MNE version=0.18.dev0, path='/Users/dengeman/github/mne-python/mne'</code></pre>
@@ -142,16 +142,14 @@
 <a class="sourceLine" id="cb15-5" data-line-number="5">tmax &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
 <a class="sourceLine" id="cb15-6" data-line-number="6">baseline &lt;-<span class="st"> </span>reticulate<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/reticulate/topics/tuple">tuple</a></span>(<span class="ot">NULL</span>, <span class="dv">0</span>)</a>
 <a class="sourceLine" id="cb15-7" data-line-number="7">event_id &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"aud/l"</span> =<span class="st"> </span>1L, <span class="st">"vis/l"</span> =<span class="st"> </span>3L)</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">epochs &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">Epochs</span>(<span class="dt">raw =</span> raw, <span class="dt">events =</span> events, <span class="dt">event_id =</span>event_id,</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9">                     <span class="dt">tmin =</span> tmin, <span class="dt">tmax =</span> tmax,</a>
-<a class="sourceLine" id="cb15-10" data-line-number="10">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>, <span class="dt">preload =</span> T) </a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">epochs<span class="op">$</span><span class="kw">pick_channels</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">'MEG 1332'</span>)) </a></code></pre></div>
-<pre><code>## &lt;Epochs  |   145 events (all good), -0.199795 - 0.499488 sec, baseline [None, 0], ~3.1 MB, data loaded,
-##  'aud/l': 72
-##  'vis/l': 73&gt;</code></pre>
+<a class="sourceLine" id="cb15-8" data-line-number="8">picks &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">pick_channels</span>(raw<span class="op">$</span>ch_names, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">'MEG 1332'</span>))</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">epochs &lt;-<span class="st"> </span>mne<span class="op">$</span><span class="kw">Epochs</span>(<span class="dt">raw =</span> raw, <span class="dt">events =</span> events, <span class="dt">event_id =</span> event_id,</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">                     <span class="dt">tmin =</span> tmin, <span class="dt">tmax =</span> tmax,</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">                     <span class="dt">picks =</span> picks <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>(),</a>
+<a class="sourceLine" id="cb15-12" data-line-number="12">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>, <span class="dt">preload =</span> T) </a></code></pre></div>
 <p>Let’s get the epochs into a dataframe.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># use MNE method</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">epochs_df &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">to_data_frame</span>(<span class="dt">long_format =</span> T)  <span class="co"># long</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># use MNE method</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">epochs_df &lt;-<span class="st"> </span>epochs<span class="op">$</span><span class="kw">to_data_frame</span>(<span class="dt">long_format =</span> T)  <span class="co"># long</span></a></code></pre></div>
 <p>Now we can set up a simple varying effects model:</p>
 <p><span class="math display">\[
 y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
@@ -160,9 +158,9 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 <p><span class="math display">\[
 \beta_{j} \sim N(\mu_{\beta[j]}, \sigma_{j}^2)
 \]</span> This is what makes this model one model instead of <span class="math inline">\(j\)</span> separate models. In this model, all <span class="math inline">\(j\)</span> coefficients are shrunk to <span class="math inline">\(\mu_j\)</span> to an extent that is proportional to the variance of the group effects.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">mod1 &lt;-<span class="st"> </span><span class="kw">lmer</span>(observation <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>condition <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>condition <span class="op">|</span><span class="st"> </span>time),</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">             <span class="dt">data =</span> epochs_df)</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">mod1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">mod1 &lt;-<span class="st"> </span><span class="kw">lmer</span>(observation <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>condition <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>condition <span class="op">|</span><span class="st"> </span>time),</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">             <span class="dt">data =</span> epochs_df)</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">mod1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>()</a></code></pre></div>
 <pre><code>## Linear mixed model fit by REML ['lmerMod']
 ## Formula: observation ~ 1 + condition + (1 + condition | time)
 ##    Data: epochs_df
@@ -189,92 +187,92 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 ##             (Intr)
 ## conditnvs/l -0.927</code></pre>
 <p>As often, lokking at the coefficients and text summaries of such models is not tremendously helpful. We will instead generate predictions.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">probe &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid</a></span>(</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"aud/l"</span>, <span class="st">"vis/l"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(),</a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="dt">time =</span> epochs_df<span class="op">$</span>time <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>()</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">)</a>
-<a class="sourceLine" id="cb20-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6">pred_mod1 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mod1, probe)</a>
-<a class="sourceLine" id="cb20-7" data-line-number="7">probe<span class="op">$</span>pred &lt;-<span class="st"> </span>pred_mod1 </a>
-<a class="sourceLine" id="cb20-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb20-9" data-line-number="9"><span class="kw">ggplot</span>(<span class="dt">data =</span> epochs_df,</a>
-<a class="sourceLine" id="cb20-10" data-line-number="10">       <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> observation,</a>
-<a class="sourceLine" id="cb20-11" data-line-number="11">                     <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(condition, epoch),</a>
-<a class="sourceLine" id="cb20-12" data-line-number="12">                     <span class="dt">color =</span> condition)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_line</span>(</a>
-<a class="sourceLine" id="cb20-15" data-line-number="15">    <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">data =</span> probe,</a>
-<a class="sourceLine" id="cb20-16" data-line-number="16">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred, <span class="dt">group =</span> condition,</a>
-<a class="sourceLine" id="cb20-17" data-line-number="17">                  <span class="dt">color =</span> condition)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-18" data-line-number="18"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-19" data-line-number="19"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">24</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-20" data-line-number="20"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
-<a class="sourceLine" id="cb20-21" data-line-number="21">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-22" data-line-number="22"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot.window">ylim</a></span>(<span class="op">-</span><span class="dv">300</span>, <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">probe &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid</a></span>(</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">  <span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"aud/l"</span>, <span class="st">"vis/l"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(),</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  <span class="dt">time =</span> epochs_df<span class="op">$</span>time <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>()</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">)</a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">pred_mod1 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mod1, probe)</a>
+<a class="sourceLine" id="cb19-7" data-line-number="7">probe<span class="op">$</span>pred &lt;-<span class="st"> </span>pred_mod1 </a>
+<a class="sourceLine" id="cb19-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb19-9" data-line-number="9"><span class="kw">ggplot</span>(<span class="dt">data =</span> epochs_df,</a>
+<a class="sourceLine" id="cb19-10" data-line-number="10">       <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> observation,</a>
+<a class="sourceLine" id="cb19-11" data-line-number="11">                     <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(condition, epoch),</a>
+<a class="sourceLine" id="cb19-12" data-line-number="12">                     <span class="dt">color =</span> condition)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_line</span>(</a>
+<a class="sourceLine" id="cb19-15" data-line-number="15">    <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">data =</span> probe,</a>
+<a class="sourceLine" id="cb19-16" data-line-number="16">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred, <span class="dt">group =</span> condition,</a>
+<a class="sourceLine" id="cb19-17" data-line-number="17">                  <span class="dt">color =</span> condition)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-18" data-line-number="18"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-19" data-line-number="19"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">24</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-20" data-line-number="20"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
+<a class="sourceLine" id="cb19-21" data-line-number="21">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-22" data-line-number="22"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot.window">ylim</a></span>(<span class="op">-</span><span class="dv">300</span>, <span class="dv">300</span>)</a></code></pre></div>
 <p><img src="plot_evoked_multilevel_model_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>We can see that the model predictions are recapitulating the temporal structure of the data. But how much uncertainty do we have about those predicrions?</p>
 <p>In the absence of a full Bayesian analysis we can do an informed parametric bootstrap that takes into account all sources of uncertainty of our multilevel model. We will use the <a href="https://cran.r-project.org/web/packages/merToolsl"><code>merTools</code></a> package for this purpose.</p>
 <p>We’ll put a few custom options which should speak for themselves.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">pred_interval_mod1 &lt;-<span class="st"> </span><span class="kw">predictInterval</span>(</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">  <span class="dt">merMod =</span> mod1, <span class="dt">newdata =</span> probe, <span class="dt">which =</span> <span class="st">"full"</span>, <span class="dt">level =</span> <span class="fl">0.95</span>,</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="dt">n.sims =</span> <span class="dv">1000</span>, <span class="dt">stat =</span> <span class="st">"mean"</span>, <span class="dt">type =</span> <span class="st">"linear.prediction"</span>,</a>
-<a class="sourceLine" id="cb21-4" data-line-number="4">  <span class="dt">returnSims =</span> T, <span class="dt">seed =</span> <span class="dv">42</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">)</a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb21-7" data-line-number="7">probe_int &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(</a>
-<a class="sourceLine" id="cb21-8" data-line-number="8">  probe, pred_interval_mod1)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">pred_interval_mod1 &lt;-<span class="st"> </span><span class="kw">predictInterval</span>(</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="dt">merMod =</span> mod1, <span class="dt">newdata =</span> probe, <span class="dt">which =</span> <span class="st">"full"</span>, <span class="dt">level =</span> <span class="fl">0.95</span>,</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="dt">n.sims =</span> <span class="dv">1000</span>, <span class="dt">stat =</span> <span class="st">"mean"</span>, <span class="dt">type =</span> <span class="st">"linear.prediction"</span>,</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">  <span class="dt">returnSims =</span> T, <span class="dt">seed =</span> <span class="dv">42</span></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">probe_int &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">  probe, pred_interval_mod1)</a></code></pre></div>
 <p>Let’s first look at the intervals.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">    <span class="dt">data =</span> probe_int,</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred, <span class="dt">group =</span> condition,</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4">                  <span class="dt">color =</span> condition, <span class="dt">ymin =</span> lwr, <span class="dt">ymax =</span> upr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">fill =</span> condition), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-9" data-line-number="9"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
-<a class="sourceLine" id="cb22-10" data-line-number="10">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-11" data-line-number="11"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-12" data-line-number="12"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F, <span class="dt">fill =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">    <span class="dt">data =</span> probe_int,</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred, <span class="dt">group =</span> condition,</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">                  <span class="dt">color =</span> condition, <span class="dt">ymin =</span> lwr, <span class="dt">ymax =</span> upr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">fill =</span> condition), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-9" data-line-number="9"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-11" data-line-number="11"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition) <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-12" data-line-number="12"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F, <span class="dt">fill =</span> F)</a></code></pre></div>
 <p><img src="plot_evoked_multilevel_model_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
 <p>Now let’s plot the single simulations on top of it. We first have to extract the simulations from the <code>merTools</code> output.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># let's subsample a few bootstrap simulations.</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">idx &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>, <span class="dt">size =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">pred_sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/attr">attr</a></span>(pred_interval_mod1, <span class="st">"sim.results"</span>)[,idx] <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">"sim"</span>, <span class="dt">value =</span> <span class="st">"pred_hat"</span>)</a>
-<a class="sourceLine" id="cb23-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb23-8" data-line-number="8">pred_sims<span class="op">$</span>sim &lt;-<span class="st"> </span>pred_sims<span class="op">$</span>sim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>()</a>
-<a class="sourceLine" id="cb23-9" data-line-number="9">pred_sims<span class="op">$</span>time &lt;-<span class="st"> </span>probe_int<span class="op">$</span>time</a>
-<a class="sourceLine" id="cb23-10" data-line-number="10">pred_sims<span class="op">$</span>condition &lt;-<span class="st"> </span>probe_int<span class="op">$</span>condition</a>
-<a class="sourceLine" id="cb23-11" data-line-number="11">pred_sims<span class="op">$</span>pred &lt;-<span class="st"> </span>probe_int<span class="op">$</span>pred</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co"># let's subsample a few bootstrap simulations.</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">idx &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>, <span class="dt">size =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">pred_sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/attr">attr</a></span>(pred_interval_mod1, <span class="st">"sim.results"</span>)[,idx] <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">"sim"</span>, <span class="dt">value =</span> <span class="st">"pred_hat"</span>)</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">pred_sims<span class="op">$</span>sim &lt;-<span class="st"> </span>pred_sims<span class="op">$</span>sim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>()</a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">pred_sims<span class="op">$</span>time &lt;-<span class="st"> </span>probe_int<span class="op">$</span>time</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">pred_sims<span class="op">$</span>condition &lt;-<span class="st"> </span>probe_int<span class="op">$</span>condition</a>
+<a class="sourceLine" id="cb22-11" data-line-number="11">pred_sims<span class="op">$</span>pred &lt;-<span class="st"> </span>probe_int<span class="op">$</span>pred</a></code></pre></div>
 <p>Now we can plot it.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">    <span class="dt">data =</span> pred_sims,</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred,</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">                  <span class="dt">group =</span> condition,</a>
-<a class="sourceLine" id="cb24-5" data-line-number="5">                  <span class="dt">color =</span> condition)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_line</span>(</a>
-<a class="sourceLine" id="cb24-7" data-line-number="7">    <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="dt">mapping =</span> <span class="kw">aes</span>(</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8">      <span class="dt">y =</span> pred_hat,</a>
-<a class="sourceLine" id="cb24-9" data-line-number="9">      <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(sim, condition))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-10" data-line-number="10"><span class="st">  </span><span class="kw">stat_summary</span>(</a>
-<a class="sourceLine" id="cb24-11" data-line-number="11">      <span class="dt">fun.ymin =</span> <span class="cf">function</span>(x){<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(x, <span class="fl">0.025</span>)},</a>
-<a class="sourceLine" id="cb24-12" data-line-number="12">      <span class="dt">fun.ymax =</span> <span class="cf">function</span>(x){<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(x, <span class="fl">0.975</span>)},</a>
-<a class="sourceLine" id="cb24-13" data-line-number="13">      <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time,</a>
-<a class="sourceLine" id="cb24-14" data-line-number="14">                    <span class="dt">y =</span> pred_hat,</a>
-<a class="sourceLine" id="cb24-15" data-line-number="15">                    <span class="dt">fill =</span> condition,</a>
-<a class="sourceLine" id="cb24-16" data-line-number="16">                    <span class="dt">group =</span> condition,</a>
-<a class="sourceLine" id="cb24-17" data-line-number="17">                    <span class="dt">color =</span> condition),</a>
-<a class="sourceLine" id="cb24-18" data-line-number="18">      <span class="dt">geom =</span> <span class="st">"ribbon"</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-19" data-line-number="19"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-20" data-line-number="20"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-21" data-line-number="21"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-22" data-line-number="22"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
-<a class="sourceLine" id="cb24-23" data-line-number="23">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-24" data-line-number="24"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-25" data-line-number="25"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F, <span class="dt">fill =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">    <span class="dt">data =</span> pred_sims,</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred,</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">                  <span class="dt">group =</span> condition,</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">                  <span class="dt">color =</span> condition)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_line</span>(</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">    <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="dt">mapping =</span> <span class="kw">aes</span>(</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">      <span class="dt">y =</span> pred_hat,</a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">      <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(sim, condition))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="st">  </span><span class="kw">stat_summary</span>(</a>
+<a class="sourceLine" id="cb23-11" data-line-number="11">      <span class="dt">fun.ymin =</span> <span class="cf">function</span>(x){<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(x, <span class="fl">0.025</span>)},</a>
+<a class="sourceLine" id="cb23-12" data-line-number="12">      <span class="dt">fun.ymax =</span> <span class="cf">function</span>(x){<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(x, <span class="fl">0.975</span>)},</a>
+<a class="sourceLine" id="cb23-13" data-line-number="13">      <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time,</a>
+<a class="sourceLine" id="cb23-14" data-line-number="14">                    <span class="dt">y =</span> pred_hat,</a>
+<a class="sourceLine" id="cb23-15" data-line-number="15">                    <span class="dt">fill =</span> condition,</a>
+<a class="sourceLine" id="cb23-16" data-line-number="16">                    <span class="dt">group =</span> condition,</a>
+<a class="sourceLine" id="cb23-17" data-line-number="17">                    <span class="dt">color =</span> condition),</a>
+<a class="sourceLine" id="cb23-18" data-line-number="18">      <span class="dt">geom =</span> <span class="st">"ribbon"</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-19" data-line-number="19"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-20" data-line-number="20"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-21" data-line-number="21"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">family =</span> <span class="st">"Helvetica"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-22" data-line-number="22"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"times [ms]"</span>,</a>
+<a class="sourceLine" id="cb23-23" data-line-number="23">       <span class="dt">y =</span> <span class="st">"predicted GRAD signal [fT/cm]"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-24" data-line-number="24"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-25" data-line-number="25"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F, <span class="dt">fill =</span> F)</a></code></pre></div>
 <p><img src="plot_evoked_multilevel_model_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>While we see a clear condition-relative modulation of the signal we also have to appreciate a lot of uncertainty.</p>
   </div>
