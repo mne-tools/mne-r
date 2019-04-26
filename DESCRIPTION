@@ -25,4 +25,6 @@ Suggests:
     boot,
     lme4,
     knittr,
-    rmarkdown
+    rmarkdown,
+    merTools
+
