@@ -17,13 +17,17 @@ mne <- NULL
 #'
 #' \code{get_data_frame} helps importing MNE data structures
 #'
-#' The code will call the `to_data_frame_method` of the MNE instanc
-#' passed. This makes it easy to use MNE-objects in R. The below
-#' Type definitions are expressed in Python types. Please refer to
-#' the reticulate documentation to learn about R-to-Python conversion
-#' rules.
-#' Note that this function requires, next to MNE, a working Pandas
-#' installation.
+#' The code will call the \code{.to_data_frame} method of the MNE
+#' data container and returns a dataframe readily usable in R. Note
+#' that the type definitions below refer to Python types. Please see
+#' the reticulate documentation to learn about R-to-Python
+#' \href{https://rstudio.github.io/reticulate/articles/calling_python.
+#' html}{conversion rules}. Note that this function requires, next to
+#' MNE, a working [Pandas](https://pandas.pydata.org) installation.
+#' For background information on exporting MNE objects
+#' to dataframes, consider the designated \href{https://martinos.org/
+#' mne/dev/auto_tutorials/plot_epochs_to_data_frame.html}{MNE
+#' tutorial}.
 #'
 #' @param inst An instance of MNE data containsers, e.g,
 #'        \code{mne$Epochs}, \code{mne$io$Raw}, \code{mne$Evoked}.
@@ -49,9 +53,18 @@ mne <- NULL
 #'        container. For convenience, a ch_type column is added when
 #'        using this option that will facilitate subsetting the
 #'        resulting dataframe. Defaults to False.
-#' @return Returns a data.frame. The layout depends on the options.
-#'         and the type of instance.
+#' @return Returns a data.frame. The layout depends on the options
+#'         (e.g. \code{long_format}) and the type of instance
+#'         (e.g. Epochs vs Raw).
 #' @export
+#' @examples
+#' library(mne)
+#' fname <- paste(mne$datasets$testing$data_path(),
+#'                "MEG", "sample", "sample_audvis_trunc_raw.fif",
+#'                sep = "/")
+#' raw <- mne$io$read_raw_fif(fname, preload = T)
+#' raw_df <- get_data_frame(raw)
+#' print(head(raw_df))
 get_data_frame <- function(inst, picks = NULL, index = NULL,
                            scaling_time = 1e3, scalings = NULL,
                            copy = T, start = NULL, stop = NULL,

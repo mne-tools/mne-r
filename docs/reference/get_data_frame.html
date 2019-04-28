@@ -145,13 +145,13 @@
     </tr>
     <tr>
       <th>picks</th>
-      <td><p>a zero-indexed integer array, a string, list, slice or
+      <td><p>A zero-indexed integer array, a string, list, slice or
 None.</p></td>
     </tr>
     <tr>
       <th>index</th>
       <td><p>The columns to be uesed as pandas index. tuple of str
-or None</p></td>
+or None.</p></td>
     </tr>
     <tr>
       <th>scaling_time</th>
@@ -193,20 +193,39 @@ resulting dataframe. Defaults to False.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a data.frame. The layout depends on the options.
-        and the type of instance.</p>
+    <p>Returns a data.frame. The layout depends on the options
+(e.g. <code>long_format</code>) and the type of instance
+(e.g. Epochs vs Raw).</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The code will call the `to_data_frame_method` of the MNE instanc
-passed. This makes it easy to use MNE-objects in R. The below
-Type definitions are expressed in Python types. Please refer to
-the reticulate documentation to learn about R-to-Python conversion
-rules.
-Note that this function requires, next ot MNE, a working Pandas
-installation</p>
+    <p>The code will call the <code>.to_data_frame</code> method of the MNE
+data container and returns a dataframe readily usable in R. Note
+that the type definitions below refer to Python types. Please see
+the reticulate documentation to learn about R-to-Python
+<a href='https://rstudio.github.io/reticulate/articles/calling_python.
+html'>conversion rules</a>. Note that this function requires, next to
+MNE, a working <a href='https://pandas.pydata.org'>Pandas</a> installation.
+For background information on exporting MNE objects
+to dataframes, consider the designated <a href='https://martinos.org/
+mne/dev/auto_tutorials/plot_epochs_to_data_frame.html'>MNE
+tutorial</a>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mne</span>)
+<span class='no'>fname</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='no'>mne</span>$<span class='no'>datasets</span>$<span class='no'>testing</span>$<span class='fu'>data_path</span>(),
+               <span class='st'>"MEG"</span>, <span class='st'>"sample"</span>, <span class='st'>"sample_audvis_trunc_raw.fif"</span>,
+               <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"/"</span>)
+<span class='no'>raw</span> <span class='kw'>&lt;-</span> <span class='no'>mne</span>$<span class='no'>io</span>$<span class='fu'>read_raw_fif</span>(<span class='no'>fname</span>, <span class='kw'>preload</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='no'>raw_df</span> <span class='kw'>&lt;-</span> <span class='fu'>get_data_frame</span>(<span class='no'>raw</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>raw_df</span>))</div><div class='output co'>#&gt;   time  channel observation ch_type
+#&gt; 1    0 MEG 0113  -25.871327    grad
+#&gt; 2    0 MEG 0112   13.109141    grad
+#&gt; 3    0 MEG 0111  -14.532409     mag
+#&gt; 4    0 MEG 0122  -27.734474    grad
+#&gt; 5    0 MEG 0123    5.027347    grad
+#&gt; 6    0 MEG 0121  -28.779105     mag</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -216,7 +235,9 @@ installation</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
