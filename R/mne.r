@@ -14,7 +14,7 @@ mne <- NULL
 }
 
 
-#' Get data from MNE into R data.rame
+#' Get data from MNE into R data.frame
 #'
 #' \code{get_data_frame} helps importing MNE data structures
 #'

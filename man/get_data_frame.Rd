@@ -2,7 +2,7 @@
 % Please edit documentation in R/mne.r
 \name{get_data_frame}
 \alias{get_data_frame}
-\title{Get data from MNE into R data.rame}
+\title{Get data from MNE into R data.frame}
 \usage{
 get_data_frame(inst, picks = NULL, index = NULL, scaling_time = 1000,
   scalings = NULL, copy = T, start = NULL, stop = NULL,
