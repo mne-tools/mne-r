@@ -121,7 +121,7 @@ get_long_format <- function (inst, picks, index, scaling_time,
     time <- out %>%
       rownames() %>%
       as.numeric() %>%
-      rep(., each = length(channel))
+      rep(each = length(channel))
 
     # we trust base-R grid expansion magic ...
     out_df <- data.frame(
