@@ -13,7 +13,6 @@ mne <- NULL
   assign("mne", mne, .GlobalEnv)
 }
 
-
 #' Get data from MNE into R data.frame
 #'
 #' \code{get_data_frame} helps importing MNE data structures
@@ -23,15 +22,15 @@ mne <- NULL
 #' Type definitions are expressed in Python types. Please refer to
 #' the reticulate documentation to learn about R-to-Python conversion
 #' rules.
-#' Note that this function requires, next ot MNE, a working Pandas
-#' installation
+#' Note that this function requires, next to MNE, a working Pandas
+#' installation.
 #'
 #' @param inst An instance of MNE data containsers, e.g,
 #'        \code{mne$Epochs}, \code{mne$io$Raw}, \code{mne$Evoked}.
-#' @param picks a zero-indexed integer array, a string, list, slice or
+#' @param picks A zero-indexed integer array, a string, list, slice or
 #'        None.
 #' @param index The columns to be uesed as pandas index. tuple of str
-#'        or None
+#'        or None.
 #' @param scaling_time Scaling to be applied to time units. Float.
 #' @param scalings Scaling to be applied to the channels picked.
 #' @param copy Whether to make a copy of the data.
@@ -61,20 +60,18 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
   inspect <- reticulate::import("inspect")
   to_df_args <- inspect$getargspec(inst$to_data_frame)$args
 
-  if("long_format" %in% to_df_args & long_format){
+  if ("long_format" %in% to_df_args & long_format) {
     out <- inst$to_data_frame(
-      picks = picks, index = index, scaling_time = scaling_time,
-      scalings = scalings, copy = copy, start = start, stop = stop,
-      long_format = long_format)
-
-    } else if (!("long_format" %in% to_df_args) & long_format) {
-      out <- get_long_format(...)
-    } else {
+    picks = picks, index = index, scaling_time = scaling_time,
+    scalings = scalings, copy = copy, start = start, stop = stop,
+    long_format = long_format)
+  } else if (!("long_format" %in% to_df_args) & long_format) {
+    out <- get_long_format(...)
+  } else {
     out <- inst$to_data_frame(
       picks = picks, index = index, scaling_time = scaling_time,
       scalings = scalings, copy = copy, start = start, stop = stop)
-    }
-
+  }
   return(out)
 }
 
@@ -102,9 +99,9 @@ get_long_format <- function (inst, picks, index, scaling_time,
       t() %>%
       matrix(nrow =  prod(out %>% dim(.)))
     channel <- out %>% colnames() %>% rep(., times = dim(out)[1])
+
     mindex <- attr(
       out, "pandas.index")$values %>% reticulate::py_to_r()
-
     condition <- sapply(mindex, function(.) .[[1]])
     epoch <- sapply(mindex, function(.) .[[2]])
     time <- sapply(mindex, function(.) .[[3]])
@@ -126,6 +123,7 @@ get_long_format <- function (inst, picks, index, scaling_time,
       as.numeric() %>%
       rep(., each = length(channel))
 
+    # we trust base-R grid expansion magic ...
     out_df <- data.frame(
       time = time,
       channel = channel,

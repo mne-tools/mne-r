@@ -3,6 +3,7 @@ context("get_data_frame")
 test_that(
   "Export of MNE-objects is equivalent in R and Python", {
 
+  # get MNE data
   fname <- paste(
     mne$datasets$testing$data_path(),
     "MEG",
@@ -23,10 +24,10 @@ test_that(
     tmax = tmax, baseline = baseline, preload = T, proj = F,
     reject = NULL)
   evoked <- epochs$average()
-  data <- c(raw, epochs, evoked)
 
+  # prepare and run tests
+  data <- c(raw, epochs, evoked)
   for (inst in data) {
-    print(inst)
     out_mne_py <- inst$to_data_frame(long_format = T)
     out_mne_r <- mne:::get_long_format(
       inst, picks = NULL, index = NULL, scaling_time = 1e3,
