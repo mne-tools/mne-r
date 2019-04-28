@@ -1,4 +1,4 @@
-## ----setup, include=T----------------------------------------------------
+## ----setup, include = T, echo = F----------------------------------------
 library(tidyverse)
 library(mne)
 
@@ -24,7 +24,8 @@ storage.mode(events) <- "integer"  # R gets the events as floats.
 tmin <- -0.2
 tmax <- 0.5
 baseline <- reticulate::tuple(NULL, 0)
-event_id <- list("aud/l" = 1L, "aud/r" = 2L, "vis/l" = 3L, "vis/r" = 4L)
+event_id <- list("aud/l" = 1L, "aud/r" = 2L,
+                 "vis/l" = 3L, "vis/r" = 4L)
 picks <- mne$pick_types(raw$info, meg = T, eeg = T)
 epochs <- mne$Epochs(raw = raw, events = events, event_id =event_id,
                      tmin = tmin, tmax = tmax,
@@ -34,8 +35,8 @@ epochs <- mne$Epochs(raw = raw, events = events, event_id =event_id,
 evoked <- epochs$average()
 
 ## ------------------------------------------------------------------------
-# use MNE method
-evoked_df <- evoked$to_data_frame(long_format = T)  # long
+# use MNE-R function
+evoked_df <- mne::get_data_frame(evoked)
 
 ## ---- fig.width=8, fig.height=6------------------------------------------
 ggplot(
@@ -47,7 +48,8 @@ ggplot(
     nrow = 3,
     scales = "free",
     strip.position = "left",
-    labeller = as_labeller(c(eeg = "EEG [mV]", grad = "GRAD [fT/cm]", mag = "MAG [fT]"))) +
+    labeller = as_labeller(c(eeg = "EEG [mV]", grad = "GRAD [fT/cm]",
+                             mag = "MAG [fT]"))) +
   theme_minimal() +
   guides(color = F) +
   labs(x = 'time [ms]', y = NULL) +
@@ -70,13 +72,16 @@ ggplot(
   data = evoked_df,
   mapping = aes(x = time, color = channel, y = observation)) +
   geom_line(mapping = aes(group = channel,
-                          color = rgb(r, g, b)), size = 0.8, alpha=0.7) +
+                          color = rgb(r, g, b)),
+            size = 0.8, alpha=0.7) +
   facet_wrap(
     ~ch_type,
     nrow = 3,
     scales = "free",
     strip.position = "left",
-    labeller = as_labeller(c(eeg = "EEG [mV]", grad = "GRAD [fT/cm]", mag = "MAG [fT]"))) +
+    labeller = as_labeller(c(eeg = "EEG [mV]",
+                             grad = "GRAD [fT/cm]",
+                             mag = "MAG [fT]"))) +
   theme_minimal() +
   guides(color = F) +
   labs(x = 'time [ms]', y = NULL) +

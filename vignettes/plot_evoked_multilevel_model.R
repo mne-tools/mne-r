@@ -1,36 +1,10 @@
----
-title: "Fit multilevel model to evoked responses using lme4"
-author: 
-  - name: Denis A. Engemann
-    affiliation: INRIA Saclay, Parietal
-                 denis-alexander.engemann@inria.fr
-output:
-  html_document:
-    theme: united
-    highlight: kate
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Your Vignette Title}
-  %\VignetteEncoding{UTF-8}
----
-
-Here we will use a multilevel model to assess the difference between
-two conditions over time. For now we will stick with the ```lme4```
-optimization-based implementation and use the parametric bootstrap
-for uncertainty estimation. Bayesian inference will be covered
-in a future example.
-
-
-```{r setup, include = T, echo = F}
+## ----setup, include = T, echo = F----------------------------------------
 library(tidyverse)
 library(mne)
 library(lme4)
 library(merTools)
-```
 
-Let's read in the raw data.
-
-```{r}
+## ------------------------------------------------------------------------
 data_path <- mne$datasets$sample$data_path()
 subject <- "sample"
 
@@ -41,11 +15,8 @@ raw_fname <- paste(data_path,
                    sep = '/')
 
 raw <- mne$io$read_raw_fif(raw_fname, preload = T)
-```
 
-We can now go ahead and compute evokeds.
-
-```{r}
+## ------------------------------------------------------------------------
 events <- mne$find_events(raw)
 storage.mode(events) <- "integer"  # R gets the events as floats.
 
@@ -58,49 +29,17 @@ epochs <- mne$Epochs(raw = raw, events = events, event_id = event_id,
                      tmin = tmin, tmax = tmax,
                      picks = picks %>% as.integer(),
                      baseline = baseline, reject = NULL, preload = T) 
-```
 
-Let's get the epochs into a dataframe.
-
-```{r}
+## ------------------------------------------------------------------------
 # use MNE method
 epochs_df <- mne::get_data_frame(epochs)  # long
-```
 
-Now we can set up a simple varying effects model:
-
-$$
-y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
-$$
-Where $y_i$ is the MEG observation at a given epoch and time point,
-$\alpha$ is the global intercept, $\alpha[j]$ the intercept of each
-tome point, $T$ is our treatment information, and $\beta[j]$ is the
-estimated treatment effect over all $j$ time points of the epoch.
-The multilevel model will learn a population-shrinkage that depewnds
-on the variance over the time.
-
-One of the assumptions of this model is that all $J$ coefficients come
-from a common distribution:
-
-$$
-\beta_{j} \sim N(\mu_{\beta[j]}, \sigma_{j}^2)
-$$
-This is what makes this model one model instead of $j$ separate
-models. In this model, all $j$ coefficients are shrunk to $\mu_j$
-to an extent that is proportional to the variance of the group
-effects.
-
-```{r}
+## ------------------------------------------------------------------------
 mod1 <- lmer(observation ~ 1 + condition + (1 + condition | time),
              data = epochs_df)
 mod1 %>% summary() %>% print()
-```
 
-As often, lokking at the coefficients and text summaries of such
-models is not tremendously helpful. We will instead generate 
-predictions.
-
-```{r, fig.width=8, fig.heigh=6}
+## ---- fig.width=8, fig.heigh=6-------------------------------------------
 probe <- expand.grid(
   condition = c("aud/l", "vis/l") %>% as.factor(),
   time = epochs_df$time %>% unique()
@@ -123,21 +62,8 @@ ggplot(data = epochs_df,
   labs(x = "times [ms]",
        y = "predicted GRAD signal [fT/cm]") +
   ylim(-300, 300)
-```
 
-We can see that the model predictions are recapitulating the temporal
-structure of the data. But how much uncertainty do we have about those
-predicrions?
-
-In the absence of a full Bayesian analysis we can do
-an informed parametric bootstrap that takes into account all sources
-of uncertainty of our multilevel model. We will use the
-[``merTools``](https://cran.r-project.org/web/packages/merToolsl)
-package for this purpose.
-
-We'll put a few custom options which should speak for themselves.
-
-```{r}
+## ------------------------------------------------------------------------
 pred_interval_mod1 <- predictInterval(
   merMod = mod1, newdata = probe, which = "full", level = 0.95,
   n.sims = 1000, stat = "mean", type = "linear.prediction",
@@ -146,11 +72,8 @@ pred_interval_mod1 <- predictInterval(
 
 probe_int <- bind_cols(
   probe, pred_interval_mod1)
-```
 
-Let's first look at the intervals.
-
-```{r, fig.width=8, fig.height=4}
+## ---- fig.width=8, fig.height=4------------------------------------------
 
 ggplot(
     data = probe_int,
@@ -164,12 +87,8 @@ ggplot(
        y = "predicted GRAD signal [fT/cm]") +
   facet_wrap(~condition) +
   guides(color = F, fill = F)
-```
 
-Now let's plot the single simulations on top of it.
-We first have to extract the simulations from the ``merTools`` output.
-
-```{r}
+## ------------------------------------------------------------------------
 # let's subsample a few bootstrap simulations.
 idx <- sample(1:1000, size = 100)
 
@@ -181,11 +100,8 @@ pred_sims$sim <- pred_sims$sim %>% as.factor()
 pred_sims$time <- probe_int$time
 pred_sims$condition <- probe_int$condition
 pred_sims$pred <- probe_int$pred
-```
 
-Now we can plot it.
-
-```{r, fig.width=8, fig.height=4}
+## ---- fig.width=8, fig.height=4------------------------------------------
 
 ggplot(
     data = pred_sims,
@@ -212,7 +128,4 @@ ggplot(
        y = "predicted GRAD signal [fT/cm]") +
   facet_wrap(~condition) +
   guides(color = F, fill = F)
-```
 
-While we see a clear condition-relative modulation of the signal we
-also have to appreciate a lot of uncertainty.

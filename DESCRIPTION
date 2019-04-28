@@ -19,7 +19,9 @@ BugReports: https://github.com/mne-tools/mne-r/issues
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 Imports: 
-    reticulate
+    reticulate,
+    tidyverse,
+    testthat
 Suggests:
     tidyverse,
     boot,
@@ -27,4 +29,3 @@ Suggests:
     knittr,
     rmarkdown,
     merTools
-

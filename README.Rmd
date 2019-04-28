@@ -33,6 +33,7 @@ For seamlessly combining R and Python code in one Rmarkdown script, currently [R
 
 Currently, MNE-R can be installed from github.
 
+
 ```{r, eval = FALSE}
 library(devtools)
 devtools::install_github("mne-tools/mne-r")

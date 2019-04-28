@@ -70,8 +70,8 @@ Now it's time to do a bit of R processing for getting doing custom
 evoked plots.
 
 ```{r}
-# use MNE method
-evoked_df <- evoked$to_data_frame(long_format = T)  # long
+# use MNE-R function
+evoked_df <- mne::get_data_frame(evoked)
 ```
 
 Let's plot it using ggplot2.

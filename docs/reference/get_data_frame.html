@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • mne</title>
+<title>Get data from MNE into R data.rame — get_data_frame • mne</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Get data from MNE into R data.rame — get_data_frame" />
+
+<meta property="og:description" content="get_data_frame helps importing MNE data structures" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -115,42 +118,106 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Get data from MNE into R data.rame</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mne-tools/mne-r/blob/master/R/mne.r'><code>R/mne.r</code></a></small>
+    <div class="hidden name"><code>get_data_frame.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p><code>get_data_frame</code> helps importing MNE data structures</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
-
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="get_data_frame.html">get_data_frame()</a></code> </p>
-        </td>
-        <td><p>Get data from MNE into R data.rame</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>get_data_frame</span>(<span class='no'>inst</span>, <span class='kw'>picks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scaling_time</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>scalings</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>long_format</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>inst</th>
+      <td><p>An instance of MNE data containsers, e.g,
+<code>mne$Epochs</code>, <code>mne$io$Raw</code>, <code>mne$Evoked</code>.</p></td>
+    </tr>
+    <tr>
+      <th>picks</th>
+      <td><p>a zero-indexed integer array, a string, list, slice or
+None.</p></td>
+    </tr>
+    <tr>
+      <th>index</th>
+      <td><p>The columns to be uesed as pandas index. tuple of str
+or None</p></td>
+    </tr>
+    <tr>
+      <th>scaling_time</th>
+      <td><p>Scaling to be applied to time units. Float.</p></td>
+    </tr>
+    <tr>
+      <th>scalings</th>
+      <td><p>Scaling to be applied to the channels picked.</p></td>
+    </tr>
+    <tr>
+      <th>copy</th>
+      <td><p>Whether to make a copy of the data.</p></td>
+    </tr>
+    <tr>
+      <th>start</th>
+      <td><p>If it is a Raw object, this defines a starting index
+for creating the dataframe from a slice. The times will be
+interpolated from the index and the sampling rate of the
+signal. Int or None.</p></td>
+    </tr>
+    <tr>
+      <th>stop</th>
+      <td><p>If it is a Raw object, this defines a stop index for
+creating the dataframe from a slice. The times will be
+interpolated from the index and the sampling rate of the
+signal. Int or None.</p></td>
+    </tr>
+    <tr>
+      <th>long_format</th>
+      <td><p>If True, the dataframe is returned in long
+format where each row is one observation of the signal at a
+unique coordinate of channels, time points, epochs and
+conditions. The number of factors depends on the data
+container. For convenience, a ch_type column is added when
+using this option that will facilitate subsetting the
+resulting dataframe. Defaults to False.</p></td>
+    </tr>
     </table>
-  </div>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>Returns a data.frame. The layout depends on the options.
+        and the type of instance.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The code will call the `to_data_frame_method` of the MNE instanc
+passed. This makes it easy to use MNE-objects in R. The below
+Type definitions are expressed in Python types. Please refer to
+the reticulate documentation to learn about R-to-Python conversion
+rules.
+Note that this function requires, next ot MNE, a working Pandas
+installation</p>
+    
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
-    </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+          </ul>
+
   </div>
 </div>
 
