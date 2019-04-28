@@ -148,8 +148,8 @@
 <a class="sourceLine" id="cb15-11" data-line-number="11">                     <span class="dt">picks =</span> picks <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>(),</a>
 <a class="sourceLine" id="cb15-12" data-line-number="12">                     <span class="dt">baseline =</span> baseline, <span class="dt">reject =</span> <span class="ot">NULL</span>, <span class="dt">preload =</span> T) </a></code></pre></div>
 <p>Let’s get the epochs into a dataframe.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># use MNE method</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">epochs_df &lt;-<span class="st"> </span>mne<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mne/topics/get_data_frame">get_data_frame</a></span>(epochs)  <span class="co"># long</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># use MNE-R function.</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">epochs_df &lt;-<span class="st"> </span>mne<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mne/topics/get_data_frame">get_data_frame</a></span>(epochs)</a></code></pre></div>
 <p>Now we can set up a simple varying effects model:</p>
 <p><span class="math display">\[
 y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
@@ -211,7 +211,7 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 <a class="sourceLine" id="cb19-22" data-line-number="22"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot.window">ylim</a></span>(<span class="op">-</span><span class="dv">300</span>, <span class="dv">300</span>)</a></code></pre></div>
 <p><img src="plot_evoked_multilevel_model_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>We can see that the model predictions are recapitulating the temporal structure of the data. But how much uncertainty do we have about those predicrions?</p>
-<p>In the absence of a full Bayesian analysis we can do an informed parametric bootstrap that takes into account all sources of uncertainty of our multilevel model. We will use the <a href="https://cran.r-project.org/web/packages/merToolsl"><code>merTools</code></a> package for this purpose.</p>
+<p>In the absence of a full Bayesian analysis we can do an informed parametric bootstrap that takes into account all sources of uncertainty of our multilevel model, which yields more conservative estimates of compatibility intervals. We will use the <a href="https://cran.r-project.org/web/packages/merToolsl"><code>merTools</code></a> package for this purpose.</p>
 <p>We’ll put a few custom options which should speak for themselves.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">pred_interval_mod1 &lt;-<span class="st"> </span><span class="kw">predictInterval</span>(</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="dt">merMod =</span> mod1, <span class="dt">newdata =</span> probe, <span class="dt">which =</span> <span class="st">"full"</span>, <span class="dt">level =</span> <span class="fl">0.95</span>,</a>
@@ -221,7 +221,7 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 <a class="sourceLine" id="cb20-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb20-7" data-line-number="7">probe_int &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(</a>
 <a class="sourceLine" id="cb20-8" data-line-number="8">  probe, pred_interval_mod1)</a></code></pre></div>
-<p>Let’s first look at the intervals.</p>
+<p>Let’s first look at the compatibility intervals.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
 <a class="sourceLine" id="cb21-2" data-line-number="2">    <span class="dt">data =</span> probe_int,</a>
 <a class="sourceLine" id="cb21-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred, <span class="dt">group =</span> condition,</a>
@@ -247,7 +247,7 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 <a class="sourceLine" id="cb22-9" data-line-number="9">pred_sims<span class="op">$</span>time &lt;-<span class="st"> </span>probe_int<span class="op">$</span>time</a>
 <a class="sourceLine" id="cb22-10" data-line-number="10">pred_sims<span class="op">$</span>condition &lt;-<span class="st"> </span>probe_int<span class="op">$</span>condition</a>
 <a class="sourceLine" id="cb22-11" data-line-number="11">pred_sims<span class="op">$</span>pred &lt;-<span class="st"> </span>probe_int<span class="op">$</span>pred</a></code></pre></div>
-<p>Now we can plot it.</p>
+<p>Now we can plot the prediction from each bootstrap replica. In order to not clutter things we will make generous use of transparency.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2">    <span class="dt">data =</span> pred_sims,</a>
 <a class="sourceLine" id="cb23-3" data-line-number="3">    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> pred,</a>
@@ -274,7 +274,7 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 <a class="sourceLine" id="cb23-24" data-line-number="24"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition) <span class="op">+</span></a>
 <a class="sourceLine" id="cb23-25" data-line-number="25"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> F, <span class="dt">fill =</span> F)</a></code></pre></div>
 <p><img src="plot_evoked_multilevel_model_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
-<p>While we see a clear condition-relative modulation of the signal we also have to appreciate a lot of uncertainty.</p>
+<p>While we see a clear condition-relative modulation of the signal, at the same time we have to appreciate considerable uncertainty.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

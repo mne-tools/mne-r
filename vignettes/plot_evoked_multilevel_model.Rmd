@@ -63,8 +63,8 @@ epochs <- mne$Epochs(raw = raw, events = events, event_id = event_id,
 Let's get the epochs into a dataframe.
 
 ```{r}
-# use MNE method
-epochs_df <- mne::get_data_frame(epochs)  # long
+# use MNE-R function.
+epochs_df <- mne::get_data_frame(epochs)
 ```
 
 Now we can set up a simple varying effects model:
@@ -131,7 +131,8 @@ predicrions?
 
 In the absence of a full Bayesian analysis we can do
 an informed parametric bootstrap that takes into account all sources
-of uncertainty of our multilevel model. We will use the
+of uncertainty of our multilevel model, which yields more
+conservative estimates of compatibility intervals. We will use the
 [``merTools``](https://cran.r-project.org/web/packages/merToolsl)
 package for this purpose.
 
@@ -148,7 +149,7 @@ probe_int <- bind_cols(
   probe, pred_interval_mod1)
 ```
 
-Let's first look at the intervals.
+Let's first look at the compatibility intervals.
 
 ```{r, fig.width=8, fig.height=4}
 
@@ -183,7 +184,8 @@ pred_sims$condition <- probe_int$condition
 pred_sims$pred <- probe_int$pred
 ```
 
-Now we can plot it.
+Now we can plot the prediction from each bootstrap replica. In order
+to not clutter things we will make generous use of transparency.
 
 ```{r, fig.width=8, fig.height=4}
 
@@ -214,5 +216,5 @@ ggplot(
   guides(color = F, fill = F)
 ```
 
-While we see a clear condition-relative modulation of the signal we
-also have to appreciate a lot of uncertainty.
+While we see a clear condition-relative modulation of the signal,
+at the same time we have to appreciate considerable uncertainty.

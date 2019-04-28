@@ -31,8 +31,8 @@ epochs <- mne$Epochs(raw = raw, events = events, event_id = event_id,
                      baseline = baseline, reject = NULL, preload = T) 
 
 ## ------------------------------------------------------------------------
-# use MNE method
-epochs_df <- mne::get_data_frame(epochs)  # long
+# use MNE-R function.
+epochs_df <- mne::get_data_frame(epochs)
 
 ## ------------------------------------------------------------------------
 mod1 <- lmer(observation ~ 1 + condition + (1 + condition | time),
