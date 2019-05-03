@@ -17,7 +17,7 @@ vignette: >
 In this vignette we will develop content that shows how to do
 averaging by hand in R.
 
-```{r setup, include = T, echo = F}
+```{r setup, message = F}
 library(tidyverse)
 library(mne)
 ```

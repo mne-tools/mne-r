@@ -17,7 +17,7 @@ vignette: >
 In this example we are going to use the machine learning functionality
 of MNE-Python and scikit-learn to analyze evoked responses.
 
-```{r setup, include = T, echo = F}
+```{r setup, message = F}
 library(tidyverse)
 library(mne)
 ```

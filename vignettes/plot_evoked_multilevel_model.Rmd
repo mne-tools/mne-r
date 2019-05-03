@@ -21,11 +21,11 @@ for uncertainty estimation. Bayesian inference will be covered
 in a future example.
 
 
-```{r setup, include = T, echo = F}
+```{r setup, message = F}
 library(tidyverse)
-library(mne)
 library(lme4)
 library(merTools)
+library(mne)
 ```
 
 Let's read in the raw data.

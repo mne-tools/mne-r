@@ -19,7 +19,7 @@ we obtain access to MNE-Python from inside R.
 We will read in the raw data, epoch it and then compute the evoked
 response. Subsequently we will use ggplot to visualize the results.
 
-```{r setup, include = T, echo = F}
+```{r setup, message = F}
 library(tidyverse)
 library(mne)
 ```
