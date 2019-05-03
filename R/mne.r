@@ -73,31 +73,30 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
   inspect <- reticulate::import("inspect")
   to_df_args <- inspect$getargspec(inst$to_data_frame)$args
 
+  .args <- as.list(match.call())[-1]
   if ("long_format" %in% to_df_args & long_format) {
-    out <- inst$to_data_frame(
-    picks = picks, index = index, scaling_time = scaling_time,
-    scalings = scalings, copy = copy, start = start, stop = stop,
-    long_format = long_format)
+    .args$inst <- NULL
+    out <- do.call(inst$to_data_frame, .args)
   } else if (!("long_format" %in% to_df_args) & long_format) {
-    out <- get_long_format(...)
+    .args$long_format <- NULL
+    out <- do.call(get_long_format, .args)
   } else {
-    out <- inst$to_data_frame(
-      picks = picks, index = index, scaling_time = scaling_time,
-      scalings = scalings, copy = copy, start = start, stop = stop)
+    .args$inst <- NULL
+    out <- do.call(inst$to_data_frame, .args)
   }
   return(out)
 }
 
-get_long_format <- function (inst, picks, index, scaling_time,
-                             scalings, copy, start, stop){
-  out <- inst$to_data_frame(
-    picks = picks, index = index, scaling_time = scaling_time,
-    scalings = scalings, copy = copy, start = start, stop = stop)
+get_long_format <- function(inst, picks, index, scaling_time,
+                            scalings, copy, start, stop){
+  .args <- as.list(match.call())[-1]
+  .args$inst <- NULL
+  out <- do.call(inst$to_data_frame, .args)
   # Order used in MNE
   # Raw + evoked
   # c('time',  'channel',  'observation', 'ch_type')
   # Epochs
-  # c('condition', "epoch", 'time',  'channel',  'observation',
+  # c('condition', "epoch", 'time',  'channel',  'observation',ś
   #    'ch_type')
 
   # common steps
@@ -114,10 +113,10 @@ get_long_format <- function (inst, picks, index, scaling_time,
     channel <- out %>% colnames() %>% rep(., times = dim(out)[1])
 
     mindex <- attr(
-      out, "pandas.index")$values %>% reticulate::py_to_r()
-    condition <- sapply(mindex, function(.) .[[1]])
-    epoch <- sapply(mindex, function(.) .[[2]])
-    time <- sapply(mindex, function(.) .[[3]])
+      out, "pandas.index")$values %>% reticulate::py_to_r(.)
+    condition <- sapply(mindex, "[[", 1)
+    epoch <- sapply(mindex, "[[", 2)
+    time <- sapply(mindex, "[[", 3)
 
     # we mostly trust base-R grid expansion magic ...
     out_df <- data.frame(
