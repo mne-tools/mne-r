@@ -40,7 +40,13 @@ unique coordinate of channels, time points, epochs and
 conditions. The number of factors depends on the data
 container. For convenience, a ch_type column is added when
 using this option that will facilitate subsetting the
-resulting dataframe. Defaults to False.}
+resulting dataframe.
+If False, mne-r is making sure that the channel names
+are cleaned from white spaces to esnure that the R-formulas
+will work. In the case that epochs are passed, the pandas
+muliti-index is unpacked and the columns "condition",
+"epochs", and "time" are prepended. Unliker the
+MNE-Python function, the default is True.}
 }
 \value{
 Returns a data.frame. The layout depends on the options

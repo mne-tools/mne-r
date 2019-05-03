@@ -52,7 +52,13 @@ mne <- NULL
 #'        conditions. The number of factors depends on the data
 #'        container. For convenience, a ch_type column is added when
 #'        using this option that will facilitate subsetting the
-#'        resulting dataframe. Defaults to False.
+#'        resulting dataframe.
+#'        If False, mne-r is making sure that the channel names
+#'        are cleaned from white spaces to esnure that the R-formulas
+#'        will work. In the case that epochs are passed, the pandas
+#'        muliti-index is unpacked and the columns "condition",
+#'        "epochs", and "time" are prepended. Unliker the
+#'        MNE-Python function, the default is True.
 #' @return Returns a data.frame. The layout depends on the options
 #'         (e.g. \code{long_format}) and the type of instance
 #'         (e.g. Epochs vs Raw).
@@ -73,16 +79,30 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
   inspect <- reticulate::import("inspect")
   to_df_args <- inspect$getargspec(inst$to_data_frame)$args
 
-  .args <- as.list(match.call())[-1]
+  .args <- list(picks = picks, index = index,
+                scaling_time = 1e3, scalings = scalings,
+                copy = copy, start = start, stop = stop,
+                long_format = long_format)
+
   if ("long_format" %in% to_df_args & long_format) {
-    .args$inst <- NULL
     out <- do.call(inst$to_data_frame, .args)
   } else if (!("long_format" %in% to_df_args) & long_format) {
     .args$long_format <- NULL
     out <- do.call(get_long_format, .args)
   } else {
-    .args$inst <- NULL
     out <- do.call(inst$to_data_frame, .args)
+    cat("Deleting whitespace in channel names ...")
+    colnames(out) <- colnames(out) %>%
+      gsub(" ", "", x = ., fixed = T)
+   if ("mne.epochs.BaseEpochs" %in% class(inst)) {
+     mindex <- attr(
+       out, "pandas.index")$values %>% reticulate::py_to_r(.)
+     out <- data.frame(
+       condition = sapply(mindex, "[[", 1) %>% as.factor(),
+       epoch = sapply(mindex, "[[", 2) %>% as.factor(),
+       time= sapply(mindex, "[[", 3) %>% as.numeric(),
+       out)
+     }
   }
   return(out)
 }

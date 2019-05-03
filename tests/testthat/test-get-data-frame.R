@@ -38,5 +38,19 @@ test_that(
     for (ii in 1:length(colnames(out_mne_py))) {
       expect_equal(out_mne_py[,ii], out_mne_r[,ii])
     }
+    out_mne_r_wide <- get_data_frame(inst, long_format = F)
+    expect_equal(
+      sum(stringr::str_detect(colnames(out_mne_r_wide), " ")), 0)
+    if ("mne.epochs.BaseEpochs" %in% class(inst)) {
+      expect_equal(colnames(out_mne_r_wide)[1:3],
+                   c("condition", "epoch", "time"))
+      expect_equal(out_mne_r_wide$condition %>% class(), "factor")
+      expect_equal(out_mne_r_wide$epoch %>% class(), "factor")
+      expect_equal(out_mne_r_wide$time %>% class(), "numeric")
+    }
+    out_mne_r_long2 <- get_data_frame(inst)
+    for (ii in 1:length(colnames(out_mne_r))) {
+      expect_equal(out_mne_r_long2[,ii], out_mne_r[,ii])
+  }
   }
 })
