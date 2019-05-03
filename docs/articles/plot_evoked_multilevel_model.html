@@ -169,7 +169,7 @@ y_i \sim N(\alpha + \alpha[j] + T\beta[j]_i, \sigma^2)
 ## Correlation of Fixed Effects:
 ##             (Intr)
 ## conditnvs/l -0.927</code></pre>
-<p>As often, lokking at the coefficients and text summaries of such models is not tremendously helpful. We will instead generate predictions.</p>
+<p>As often, looking at the coefficients and text summaries of such models is not tremendously helpful. We will instead generate predictions.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">probe &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid</a></span>(</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"aud/l"</span>, <span class="st">"vis/l"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(),</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="dt">time =</span> epochs_df<span class="op">$</span>time <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>()</a>

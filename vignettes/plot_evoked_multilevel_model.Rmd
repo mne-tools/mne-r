@@ -96,7 +96,7 @@ mod1 <- lmer(observation ~ 1 + condition + (1 + condition | time),
 mod1 %>% summary() %>% print()
 ```
 
-As often, lokking at the coefficients and text summaries of such
+As often, looking at the coefficients and text summaries of such
 models is not tremendously helpful. We will instead generate 
 predictions.
 
