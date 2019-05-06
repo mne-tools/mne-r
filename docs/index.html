@@ -185,8 +185,10 @@
 <a class="sourceLine" id="cb5-11" data-line-number="11">raw<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>()  <span class="co"># plot it!</span></a>
 <a class="sourceLine" id="cb5-12" data-line-number="12">plt<span class="op">$</span><span class="kw">show</span>()  <span class="co"># show the figure, then search for the window popping up.</span></a></code></pre></div>
 <ul>
-<li>Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.</li>
+<li><p>Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.</p></li>
+<li><p>Currently, if 32-bit and 64-bit versions of R are installed, it seems devtools tries to build for both of them. This yields a <code>loading failed for 'i386'</code> error. To force building the package for your currently running R version use the <code>INSTALL_opts</code> argument of <code>install_github</code>:</p></li>
 </ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"mne-tools/mne-r"</span>, <span class="dt">INSTALL_opts=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--no-multiarch"</span>))</a></code></pre></div>
 </div>
 <div id="roadmap" class="section level2">
 <h2 class="hasAnchor">

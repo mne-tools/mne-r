@@ -95,7 +95,7 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 #>         Path to sample dataset directory.
 ```
 
-## Known issues and troubleshooting
+## Troubleshooting and known issues.
 
   - If knitting Python chunks inside Rmarkdown fails, it is most likely
     a problem of telling `reticulate` which Python interpreter to use.
@@ -151,6 +151,18 @@ plt$show()  # show the figure, then search for the window popping up.
 
   - Some of the examples may depend on the latest MNE-Python code. We
     will try to provide patches little by little in MNE-Python or here.
+
+  - Currently, if 32-bit and 64-bit versions of R are installed, it
+    seems devtools tries to build for both of them. This yields a
+    `loading failed for 'i386'` error. To force building the package for
+    your currently running R version use the `INSTALL_opts` argument of
+    `install_github`:
+
+<!-- end list -->
+
+``` r
+devtools::install_github("mne-tools/mne-r", INSTALL_opts=c("--no-multiarch"))
+```
 
 ## Roadmap
 
