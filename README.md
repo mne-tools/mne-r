@@ -35,9 +35,9 @@ documentation. We generally recommend using the
 [Anaconda](https://www.anaconda.com) Python distribution and Python 3
 instead of Python 2.
 
-For seamlessly combining R and Python code in one Rmarkdown script,
-currently [Rstudio 1.2
-preview](https://blog.rstudio.com/2018/10/09/rstudio-1-2-preview-reticulated-python/)
+For seamlessly combining R and Python code in one Rmarkdown script, the
+latest
+[Rstudio 1.2](https://blog.rstudio.com/2019/04/30/rstudio-1-2-release/)
 is needed.
 
 Currently, MNE-R can be installed from github.
@@ -95,7 +95,36 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 #>         Path to sample dataset directory.
 ```
 
-## Known issues
+## Known issues and troubleshooting
+
+  - If knitting Python chunks inside Rmarkdown fails, it is most likely
+    a problem of telling `reticulate` which Python interpreter to use.
+    To use the recommended Python 3 from Aanaconda, assuming it is
+    installed, you can include this line in your `.bashrc` (Linux) or
+    `.bash_profile` (Mac):
+
+<!-- end list -->
+
+``` bash
+export RETICULATE_PYTHON=$HOME/anaconda3/bin/python
+```
+
+  - Also make sure your Python installation is ok. If you cannot run the
+    Python code of interest using the Python interpreter, the problem is
+    there. For exampple, make sure that inside the Python interpreter
+    importing `mne` works.
+
+<!-- end list -->
+
+``` python
+import mne
+```
+
+This should not give you any error message.
+
+  - For optimal Python and `reticulate` support in Rstudio, make sure
+    you have the latest version of
+    [Rstudio](https://blog.rstudio.com/2019/04/30/rstudio-1-2-release/).
 
   - Currently, when making matplotlib figures from within R, the
     resulting image will not be rendered inside the Rstudio Rmarkdown
