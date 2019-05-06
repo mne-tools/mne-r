@@ -88,6 +88,7 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
     out <- do.call(inst$to_data_frame, .args)
   } else if (!("long_format" %in% to_df_args) & long_format) {
     .args$long_format <- NULL
+    .args$inst <- inst
     out <- do.call(get_long_format, .args)
   } else {
     out <- do.call(inst$to_data_frame, .args)
