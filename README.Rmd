@@ -87,6 +87,11 @@ plt$show()  # show the figure, then search for the window popping up.
 
 - Some of the examples may depend on the latest MNE-Python code. We will try to provide patches little by little in MNE-Python or here.
 
+- Currently, if 32-bit and 64-bit versions of R are installed, it seems devtools tries to build for both of them. This yields a ```loading failed for 'i386'``` error. To force building the package for your currently running R version use the ```INSTALL_opts``` argument of ```install_github```:
+
+``` r
+devtools::install_github("mne-tools/mne-r", INSTALL_opts=c("--no-multiarch"))
+```
 ## Roadmap
 
 1. Add many vignettes and examples
