@@ -4,12 +4,11 @@ test_that(
   "Export of MNE-objects is equivalent in R and Python", {
 
   # get MNE data
-  fname <- paste(
+  fname <- file.path(
     mne$datasets$testing$data_path(),
     "MEG",
     "sample",
-    "sample_audvis_trunc_raw.fif",
-    sep = "/")
+    "sample_audvis_trunc_raw.fif")
 
   raw <- mne$io$read_raw_fif(fname)
   events <- mne$find_events(raw)
@@ -30,8 +29,8 @@ test_that(
   for (inst in data) {
     out_mne_py <- inst$to_data_frame(long_format = T)
     out_mne_r <- mne:::get_long_format(
-      inst, picks = NULL, index = NULL, scaling_time = 1e3,
-      scalings = NULL, copy = T, start = NULL, stop = NULL)
+      inst, picks = NULL, index = "time", time_format = "ms",
+      scalings = NULL, copy = TRUE, start = NULL, stop = NULL)
 
     expect_equal(colnames(out_mne_py), colnames(out_mne_r))
 

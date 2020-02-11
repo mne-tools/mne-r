@@ -35,7 +35,10 @@ mne <- NULL
 #'        None.
 #' @param index The columns to be uesed as pandas index. tuple of str
 #'        or None.
-#' @param scaling_time Scaling to be applied to time units. Float.
+#' @param time_format How to handle time. Options are NULL (keep time as float
+#'        in seconds), "ms" (convert to integer milliseconds), "datetime"
+#'        (convert to datetime object), or "timedelta" (convert to datetime
+#'        offset object). Default is "ms"
 #' @param scalings Scaling to be applied to the channels picked.
 #' @param copy Whether to make a copy of the data.
 #' @param start If it is a Raw object, this defines a starting index
@@ -72,7 +75,7 @@ mne <- NULL
 #' raw_df <- get_data_frame(raw)
 #' print(head(raw_df))
 get_data_frame <- function(inst, picks = NULL, index = NULL,
-                           scaling_time = 1e3, scalings = NULL,
+                           time_format = "ms", scalings = NULL,
                            copy = T, start = NULL, stop = NULL,
                            long_format = T) {
   # handle MNE python version
@@ -80,7 +83,7 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
   to_df_args <- inspect$getargspec(inst$to_data_frame)$args
 
   .args <- list(picks = picks, index = index,
-                scaling_time = 1e3, scalings = scalings,
+                time_format = time_format, scalings = scalings,
                 copy = copy, start = start, stop = stop,
                 long_format = long_format)
 
@@ -108,7 +111,7 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
   return(out)
 }
 
-get_long_format <- function(inst, picks, index, scaling_time,
+get_long_format <- function(inst, picks, index, time_format,
                             scalings, copy, start, stop){
   .args <- as.list(match.call())[-1]
   .args$inst <- NULL
