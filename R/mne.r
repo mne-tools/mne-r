@@ -152,7 +152,7 @@ get_long_format <- function(inst, picks, index, time_format,
       ch_type = ch_type
     )
   } else {
-    observation <- as.vector(t(out))
+    value <- as.vector(t(out))
     channel <-  out %>% colnames()
     time <- out %>%
       rownames() %>%
@@ -163,8 +163,8 @@ get_long_format <- function(inst, picks, index, time_format,
     out_df <- data.frame(
       time = time,
       channel = channel,
-      observation = observation,
-      ch_type = ch_type
+      ch_type = ch_type,
+      value = value
     )
   }
   # XXX source estimate class is not yet handled.
