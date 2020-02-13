@@ -84,8 +84,12 @@ get_data_frame <- function(inst, picks = NULL, index = NULL,
 
   .args <- list(picks = picks, index = index,
                 time_format = time_format, scalings = scalings,
-                copy = copy, start = start, stop = stop,
-                long_format = long_format)
+                copy = copy, long_format = long_format)
+
+  if ("mne.io.base.BaseRaw" %in% class(inst)) {
+    .args$start <- start
+    .args$stop <- stop
+}
 
   if ("long_format" %in% to_df_args & long_format) {
     out <- do.call(inst$to_data_frame, .args)
@@ -130,7 +134,7 @@ get_long_format <- function(inst, picks, index, time_format,
     as.factor()
 
   if ("mne.epochs.BaseEpochs" %in% class(inst)) {
-    observation <- out %>%
+    value <- out %>%
       as.matrix() %>%
       t() %>%
       matrix(nrow =  prod(out %>% dim(.)))
@@ -148,8 +152,8 @@ get_long_format <- function(inst, picks, index, time_format,
       epoch = epoch %>% as.factor() %>% rep(each = dim(out)[2]),
       time = time %>% as.numeric() %>% rep(each = dim(out)[2]),
       channel = channel,
-      observation = observation,
-      ch_type = ch_type
+      ch_type = ch_type,
+      value = value
     )
   } else {
     value <- as.vector(t(out))
