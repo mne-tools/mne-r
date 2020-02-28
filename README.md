@@ -47,7 +47,7 @@ library(devtools)
 devtools::install_github("mne-tools/mne-r")
 ```
 
-To get started, simply laod the mne library
+To get started, simply load the mne library
 
 ``` r
 library(mne)  # load mne and get the mne object
@@ -58,13 +58,13 @@ print(names(mne)[1:10])
 #>  [1] "AcqParserFIF"               "add_reference_channels"    
 #>  [3] "add_source_space_distances" "annotations"               
 #>  [5] "Annotations"                "apply_forward"             
-#>  [7] "apply_forward_raw"          "average_forward_solutions" 
+#>  [7] "apply_forward_raw"          "average_forward_solutions"
 #>  [9] "BaseEpochs"                 "baseline"
 
 # use dollar signs to access MNE modules, functions and objects
 cat(mne$datasets$sample$data_path$`__doc__`)
 #> Get path to local copy of sample dataset.
-#> 
+#>
 #>     Parameters
 #>     ----------
 #>     path : None | str
@@ -88,7 +88,7 @@ cat(mne$datasets$sample$data_path$`__doc__`)
 #>     verbose : bool, str, int, or None
 #>         If not None, override default verbose level (see :func:`mne.verbose`
 #>         and :ref:`Logging documentation <tut_logging>` for more).
-#> 
+#>
 #>     Returns
 #>     -------
 #>     path : str
@@ -140,7 +140,7 @@ plt <- import("matplotlib.pyplot")  # get matplotlib handle
 
 data_path <- mne$datasets$sample$data_path()
 raw_fname <- paste(data_path,
-                   'MEG', 
+                   'MEG',
                    'samlpe',
                    'sample_audvis_filt-0-40_raw.fif',
                    sep = '/')
