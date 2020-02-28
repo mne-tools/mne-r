@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# MNE-R: fast acccess to MNE-Python from within R 
+# MNE-R: fast acccess to MNE-Python from within R
 
 <img src="man/figures/mne_logo.png" align="right" alt="" width="160" />
 
@@ -40,7 +40,7 @@ devtools::install_github("mne-tools/mne-r")
 ```
 
 
-To get started, simply laod the mne library
+To get started, simply load the mne library
 
 ```{r}
 library(mne)  # load mne and get the mne object
@@ -76,7 +76,7 @@ plt <- import("matplotlib.pyplot")  # get matplotlib handle
 
 data_path <- mne$datasets$sample$data_path()
 raw_fname <- paste(data_path,
-                   'MEG', 
+                   'MEG',
                    'samlpe',
                    'sample_audvis_filt-0-40_raw.fif',
                    sep = '/')
@@ -98,4 +98,3 @@ devtools::install_github("mne-tools/mne-r", INSTALL_opts=c("--no-multiarch"))
 2. Find common inconvenient steps and add convenience R functions
 3. Motivate contributed examples and code from the R-EEG community
 4. Add advanced content that leverages functionality unique to R
-
